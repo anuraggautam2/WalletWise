@@ -1,0 +1,43 @@
+{
+  "users": [
+    {
+      "_id": "usr_38916901-c73",
+      "name": "Nikhil Singh",
+      "email": "nikhil@test.edu",
+      "password": "$2b$12$3jZvrYAH2jV7uAIcatjUiuaQfOW9LJPf43R3bzGt7R2VRgiSHeWdm",
+      "currency": "INR",
+      "dateFormat": "DD/MM/YYYY",
+      "createdAt": "2026-11-19T06:35:30.402Z",
+      "updatedAt": "2026-11-19T06:35:30.402Z"
+    }
+  ],
+  "transactions": [
+    {
+      "_id": "tx_8a390d1a-f2d5-",
+      "userId": "usr_38916901-c73",
+      "type": "income",
+      "title": "Monthly Allowance",
+      "amount": 15000,
+      "category": "Monthly Allowance",
+      "date": "2026-11-19T06:35:53.922Z",
+      "paymentMethod": "Bank Transfer",
+      "description": "",
+      "createdAt": "2026-11-19T06:35:53.922Z",
+      "updatedAt": "2026-11-19T06:35:53.922Z"
+    },
+    {
+      "_id": "tx_a38ea044-a0a3-",
+      "userId": "usr_38916901-c73",
+      "type": "expense",
+      "title": "Course Textbooks",
+      "amount": 850,
+      "category": "Education",
+      "date": "2026-11-19T06:35:46.070Z",
+      "paymentMethod": "UPI",
+      "description": "Semester 4 core books",
+      "createdAt": "2026-11-19T06:35:46.070Z",
+      "updatedAt": "2026-11-19T06:35:46.070Z"
+    }
+  ],
+  "budgets": []
+}
