@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Target, Sliders } from 'lucide-react'
-import { EXPENSE_CATEGORIES } from '../../../server/models/Transaction.js'
+import { EXPENSE_CATEGORIES } from '../../constants/categories.js'
 import Button from '../ui/Button'
 import { useTransactions } from '../../context/TransactionContext'
 

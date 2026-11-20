@@ -18,7 +18,7 @@ import Button from '../ui/Button'
 import CategoryIcon from '../ui/CategoryIcon'
 import ConfirmDialog from './ConfirmDialog'
 import { useTransactions } from '../../context/TransactionContext'
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../../server/models/Transaction.js'
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../constants/categories.js'
 
 export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
   const { transactions, pagination, refreshData, deleteTransaction, loading } = useTransactions()

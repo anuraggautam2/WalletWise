@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowDownRight, ArrowUpRight, Calendar, CreditCard, FileText } from 'lucide-react'
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, PAYMENT_METHODS } from '../../../server/models/Transaction.js'
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, PAYMENT_METHODS } from '../../constants/categories.js'
 import CategoryIcon from '../ui/CategoryIcon'
 import Button from '../ui/Button'
 import { useTransactions } from '../../context/TransactionContext'

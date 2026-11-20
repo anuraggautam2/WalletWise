@@ -18,6 +18,52 @@ const isVercel = Boolean(process.env.VERCEL)
 const DATA_DIR = isVercel ? path.join('/tmp', 'walletwise-data') : DEFAULT_DATA_DIR
 const DATA_FILE = path.join(DATA_DIR, 'store.json')
 
+const INITIAL_STORE_DATA = {
+  users: [
+    {
+      _id: 'usr_38916901-c73',
+      name: 'Nikhil Singh',
+      email: 'nikhil@test.edu',
+      password: '$2b$12$3jZvrYAH2jV7uAIcatjUiuaQfOW9LJPf43R3bzGt7R2VRgiSHeWdm',
+      currency: 'INR',
+      dateFormat: 'DD/MM/YYYY',
+      createdAt: '2026-11-19T06:35:30.402Z',
+      updatedAt: '2026-11-19T06:35:30.402Z'
+    }
+  ],
+  transactions: [
+    {
+      _id: 'tx_8a390d1a-f2d5-',
+      userId: 'usr_38916901-c73',
+      type: 'income',
+      title: 'Monthly Allowance',
+      amount: 15000,
+      category: 'Monthly Allowance',
+      date: '2026-11-19T06:35:53.922Z',
+      paymentMethod: 'Bank Transfer',
+      description: '',
+      createdAt: '2026-11-19T06:35:53.922Z',
+      updatedAt: '2026-11-19T06:35:53.922Z'
+    },
+    {
+      _id: 'tx_a38ea044-a0a3-',
+      userId: 'usr_38916901-c73',
+      type: 'expense',
+      title: 'Course Textbooks',
+      amount: 850,
+      category: 'Education',
+      date: '2026-11-19T06:35:46.070Z',
+      paymentMethod: 'UPI',
+      description: 'Semester 4 core books',
+      createdAt: '2026-11-19T06:35:46.070Z',
+      updatedAt: '2026-11-19T06:35:46.070Z'
+    }
+  ],
+  budgets: []
+}
+
+let inMemoryStore = JSON.parse(JSON.stringify(INITIAL_STORE_DATA))
+
 // Ensure local persistence data directory and initial schema
 try {
   if (!fs.existsSync(DATA_DIR)) {
@@ -34,26 +80,31 @@ const loadLocalData = () => {
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf8')
-      return JSON.parse(raw)
+      const parsed = JSON.parse(raw)
+      inMemoryStore = parsed
+      return parsed
     }
     if (fs.existsSync(DEFAULT_DATA_FILE)) {
       const raw = fs.readFileSync(DEFAULT_DATA_FILE, 'utf8')
-      return JSON.parse(raw)
+      const parsed = JSON.parse(raw)
+      inMemoryStore = parsed
+      return parsed
     }
   } catch (err) {
-    console.error('Error reading local store:', err)
+    console.error('Error reading store file, using fallback store:', err.message)
   }
-  return { users: [], transactions: [], budgets: [] }
+  return inMemoryStore || JSON.parse(JSON.stringify(INITIAL_STORE_DATA))
 }
 
 const saveLocalData = (data) => {
+  inMemoryStore = data
   try {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true })
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8')
   } catch (err) {
-    console.error('Error writing local store:', err)
+    console.error('Notice: using in-memory store (disk write skipped):', err.message)
   }
 }
 
