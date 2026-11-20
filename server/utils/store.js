@@ -10,18 +10,34 @@ import { getDBStatus } from '../config/db.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const DATA_DIR = path.join(__dirname, '../data')
+const DEFAULT_DATA_DIR = path.join(__dirname, '../data')
+const DEFAULT_DATA_FILE = path.join(DEFAULT_DATA_DIR, 'store.json')
+
+// If running in Vercel or read-only serverless, use /tmp which is writable
+const isVercel = Boolean(process.env.VERCEL)
+const DATA_DIR = isVercel ? path.join('/tmp', 'walletwise-data') : DEFAULT_DATA_DIR
 const DATA_FILE = path.join(DATA_DIR, 'store.json')
 
 // Ensure local persistence data directory and initial schema
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true })
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true })
+  }
+  if (isVercel && !fs.existsSync(DATA_FILE) && fs.existsSync(DEFAULT_DATA_FILE)) {
+    fs.copyFileSync(DEFAULT_DATA_FILE, DATA_FILE)
+  }
+} catch (err) {
+  console.error('Notice: error initializing local store directory:', err.message)
 }
 
 const loadLocalData = () => {
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf8')
+      return JSON.parse(raw)
+    }
+    if (fs.existsSync(DEFAULT_DATA_FILE)) {
+      const raw = fs.readFileSync(DEFAULT_DATA_FILE, 'utf8')
       return JSON.parse(raw)
     }
   } catch (err) {
@@ -32,6 +48,9 @@ const loadLocalData = () => {
 
 const saveLocalData = (data) => {
   try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true })
+    }
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8')
   } catch (err) {
     console.error('Error writing local store:', err)

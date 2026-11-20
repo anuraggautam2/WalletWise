@@ -18,6 +18,9 @@ const app = express()
 const PORT = process.env.PORT || 5000
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173'
 
+// Trust reverse proxy (Vercel, AWS, Nginx) so rate limiter and IP detection function safely
+app.set('trust proxy', 1)
+
 // Connect database (auto-falls back to local JSON persistence if offline)
 connectDB()
 
@@ -29,10 +32,13 @@ app.use(helmet({
   crossOriginResourcePolicy: false,
 }))
 
-// Restricted CORS
+// Permissive CORS for dev and production / Vercel deployments
 app.use(
   cors({
-    origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or same-origin) or any valid origin
+      callback(null, true)
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -53,9 +59,11 @@ const apiLimiter = rateLimit({
     message: 'Too many requests from this IP address. Please try again after 15 minutes.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false }
 })
 app.use('/api', apiLimiter)
+app.use(apiLimiter)
 
 // Strict Rate Limiting on Authentication routes (anti brute-force)
 const authLimiter = rateLimit({
@@ -64,31 +72,42 @@ const authLimiter = rateLimit({
   message: {
     success: false,
     message: 'Too many authentication attempts. Please try again in 15 minutes.'
-  }
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false }
 })
-app.use('/api/auth/login', authLimiter)
-app.use('/api/auth/register', authLimiter)
+app.use(['/api/auth/login', '/auth/login'], authLimiter)
+app.use(['/api/auth/register', '/auth/register'], authLimiter)
 
 // -------------------------------------------------------------
 // API ROUTES
 // -------------------------------------------------------------
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({
     status: 'online',
     appName: 'WalletWise Student Expense Tracker API',
-    database: getDBStatus() ? 'MongoDB Cluster' : 'Resilient File-Backed Store',
+    database: getDBStatus() ? 'MongoDB Cluster' : 'Resilient JSON Store',
     timestamp: new Date().toISOString()
   })
 })
 
+// Support both /api/* and direct mounts for serverless rewrites
 app.use('/api/auth', authRoutes)
+app.use('/auth', authRoutes)
+
 app.use('/api/transactions', transactionRoutes)
+app.use('/transactions', transactionRoutes)
+
 app.use('/api/budgets', budgetRoutes)
+app.use('/budgets', budgetRoutes)
+
 app.use('/api/users', userRoutes)
+app.use('/users', userRoutes)
 
 // 404 handler for undefined API routes
 app.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/api')) {
+  if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/auth') || req.originalUrl.startsWith('/transactions') || req.originalUrl.startsWith('/budgets') || req.originalUrl.startsWith('/users')) {
     return res.status(404).json({
       success: false,
       message: `API endpoint '${req.originalUrl}' does not exist.`
@@ -119,9 +138,11 @@ app.use((err, req, res, next) => {
   })
 })
 
-// Start server
-const server = app.listen(PORT, () => {
-  console.log(`[WalletWise Backend] API Server active on http://localhost:${PORT}`)
-})
+// Start server locally when not running in serverless environment
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[WalletWise Backend] API Server active on http://localhost:${PORT}`)
+  })
+}
 
 export default app

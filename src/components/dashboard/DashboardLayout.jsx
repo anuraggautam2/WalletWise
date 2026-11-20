@@ -11,7 +11,7 @@ import AddTransactionModal from './AddTransactionModal'
 import AddBudgetModal from './AddBudgetModal'
 import Toast from '../ui/Toast'
 
-export default function DashboardLayout() {
+export default function DashboardLayout({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('overview')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -47,6 +47,7 @@ export default function DashboardLayout() {
         mobileOpen={mobileMenuOpen}
         setMobileOpen={setMobileMenuOpen}
         onOpenAddModal={handleOpenAddModal}
+        onNavigate={onNavigate}
       />
 
       {/* Main App Canvas */}

@@ -13,6 +13,7 @@ import {
   ChevronRight,
   User,
   ArrowUpRight,
+  ArrowLeft,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import Button from '../ui/Button'
@@ -25,6 +26,7 @@ export default function Sidebar({
   mobileOpen,
   setMobileOpen,
   onOpenAddModal,
+  onNavigate,
 }) {
   const { user, logout } = useAuth()
 
@@ -132,6 +134,19 @@ export default function Sidebar({
             </div>
           )}
         </div>
+
+        {onNavigate && (
+          <button
+            onClick={() => onNavigate('landing')}
+            className={`w-full flex items-center gap-2.5 px-3 py-2 mb-1 rounded-xl text-xs font-semibold text-text-muted hover:text-text-main hover:bg-dark-card transition-colors ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Back to Landing Page"
+          >
+            <ArrowLeft className="w-4 h-4 shrink-0" />
+            {!collapsed && <span>Back to Website</span>}
+          </button>
+        )}
 
         <button
           onClick={logout}
