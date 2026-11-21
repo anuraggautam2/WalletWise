@@ -1,33 +1,24 @@
 import React from 'react'
-import { motion } from 'framer-motion'
 
 export default function Card({
   children,
   className = '',
-  hoverEffect = true,
+  hoverEffect = false,
   elevated = false,
-  glow = false,
-  glowColor = 'blue', // 'blue' | 'violet' | 'green'
   onClick,
   ...props
 }) {
-  const glowMap = {
-    blue: 'hover:shadow-fintech-glow-blue',
-    violet: 'hover:shadow-fintech-glow-violet',
-    green: 'hover:shadow-fintech-glow-green',
-  }
-
   return (
-    <motion.div
-      whileHover={hoverEffect ? { y: -2 } : {}}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
+    <div
       onClick={onClick}
-      className={`rounded-2xl transition-all duration-200 border ${
-        elevated ? 'bg-dark-card-elevated border-dark-border' : 'bg-dark-card border-dark-border'
-      } ${hoverEffect ? `hover:border-dark-border-hover ${glow ? glowMap[glowColor] : 'hover:shadow-fintech-card'}` : ''} ${className}`}
+      className={`rounded-xl transition-colors duration-150 border ${
+        elevated
+          ? 'bg-dark-card-elevated border-dark-border shadow-fintech-card'
+          : 'bg-dark-card border-dark-border shadow-fintech-subtle'
+      } ${hoverEffect ? 'hover:border-dark-border-hover' : ''} ${className}`}
       {...props}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }

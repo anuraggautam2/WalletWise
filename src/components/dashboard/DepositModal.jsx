@@ -45,30 +45,31 @@ export default function DepositModal({ isOpen, onClose, goal = null }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-[#060A14]/80 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/75 backdrop-blur-sm"
       />
 
       {/* Dialog */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        initial={{ opacity: 0, scale: 0.96, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="relative w-full max-w-md bg-[#0E1420] border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden z-10"
+        exit={{ opacity: 0, scale: 0.96, y: 10 }}
+        transition={{ duration: 0.18 }}
+        className="relative w-full max-w-md bg-dark-card border border-dark-border rounded-xl shadow-2xl overflow-hidden z-10"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-dark-border flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <PlusCircle className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-100">Add Savings Contribution</h3>
-              <p className="text-xs text-slate-400 truncate max-w-[220px]">{goal.title}</p>
+              <h3 className="text-sm font-bold text-text-main">Add Savings Deposit</h3>
+              <p className="text-xs text-text-muted truncate max-w-[220px]">{goal.title}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/[0.06]"
+            className="p-1 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-secondary transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -77,22 +78,22 @@ export default function DepositModal({ isOpen, onClose, goal = null }) {
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium">
+            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium">
               {error}
             </div>
           )}
 
           {/* Goal Snapshot */}
-          <div className="p-3.5 rounded-xl bg-[#141C2E] border border-white/[0.06] flex items-center justify-between">
+          <div className="p-3.5 rounded-lg bg-dark-secondary border border-dark-border flex items-center justify-between">
             <div>
-              <p className="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Current Progress</p>
-              <p className="text-sm font-semibold text-slate-100 mt-0.5">
-                {formatCurrency(goal.currentAmount)} <span className="text-slate-500 font-normal">/ {formatCurrency(goal.targetAmount)}</span>
+              <p className="text-[11px] text-text-muted uppercase tracking-wider font-semibold">Current Progress</p>
+              <p className="text-sm font-bold font-mono tabular-nums text-text-main mt-0.5">
+                {formatCurrency(goal.currentAmount)} <span className="text-text-muted font-normal">/ {formatCurrency(goal.targetAmount)}</span>
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Remaining</p>
-              <p className="text-sm font-semibold text-emerald-400 mt-0.5 font-mono">
+              <p className="text-[11px] text-text-muted uppercase tracking-wider font-semibold">Remaining</p>
+              <p className="text-sm font-bold text-emerald-400 mt-0.5 font-mono tabular-nums">
                 {formatCurrency(remaining)}
               </p>
             </div>
@@ -100,7 +101,7 @@ export default function DepositModal({ isOpen, onClose, goal = null }) {
 
           {/* Deposit Input */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
               Deposit Amount
             </label>
             <input
@@ -111,20 +112,20 @@ export default function DepositModal({ isOpen, onClose, goal = null }) {
               placeholder="e.g. 500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#141C2E] border border-white/[0.08] text-base font-mono text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-base font-mono tabular-nums text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             />
           </div>
 
           {/* Quick Selection Chips */}
           <div>
-            <p className="text-[11px] text-slate-400 mb-2">Quick Add</p>
+            <p className="text-[11px] text-text-muted mb-2 font-semibold uppercase tracking-wider">Quick Add</p>
             <div className="flex flex-wrap gap-2">
               {quickAmounts.map((q) => (
                 <button
                   type="button"
                   key={q}
                   onClick={() => setAmount(q.toString())}
-                  className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-xs font-mono text-slate-300 transition-colors"
+                  className="px-3 py-1.5 rounded-md bg-dark-secondary hover:bg-dark-card border border-dark-border text-xs font-mono text-text-secondary hover:text-emerald-400 transition-colors"
                 >
                   +{formatCurrency(q)}
                 </button>
@@ -133,7 +134,7 @@ export default function DepositModal({ isOpen, onClose, goal = null }) {
           </div>
 
           {/* Buttons */}
-          <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/[0.06]">
+          <div className="pt-2 flex items-center justify-end gap-3 border-t border-dark-border">
             <Button variant="ghost" size="sm" type="button" onClick={onClose}>
               Cancel
             </Button>

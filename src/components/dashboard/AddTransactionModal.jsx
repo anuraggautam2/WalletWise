@@ -103,25 +103,25 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-[#060A14]/80 backdrop-blur-md"
+          className="absolute inset-0 bg-black/75 backdrop-blur-sm"
         />
 
         {/* Modal Dialog */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ duration: 0.2 }}
-          className="relative w-full max-w-lg bg-dark-card border border-dark-border rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+          exit={{ opacity: 0, scale: 0.96, y: 10 }}
+          transition={{ duration: 0.18 }}
+          className="relative w-full max-w-lg bg-dark-card border border-dark-border rounded-xl p-6 sm:p-7 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-dark-border">
-            <h3 className="text-xl font-bold text-text-main">
+            <h3 className="text-lg font-bold text-text-main">
               {initialData ? 'Edit Transaction' : 'Record Transaction'}
             </h3>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl text-text-muted hover:text-text-main hover:bg-dark-card-elevated transition-colors"
+              className="p-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-secondary transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -129,11 +129,11 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
 
           <form onSubmit={handleSubmit} className="mt-5 space-y-5">
             {/* Type Switcher Tabs */}
-            <div className="grid grid-cols-2 p-1 rounded-xl bg-dark-secondary border border-dark-border">
+            <div className="grid grid-cols-2 p-1 rounded-lg bg-dark-secondary border border-dark-border">
               <button
                 type="button"
                 onClick={() => handleTypeChange('expense')}
-                className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 py-2 rounded-md text-xs font-semibold transition-all ${
                   type === 'expense'
                     ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30 shadow-sm'
                     : 'text-text-muted hover:text-text-main'
@@ -145,7 +145,7 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
               <button
                 type="button"
                 onClick={() => handleTypeChange('income')}
-                className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 py-2 rounded-md text-xs font-semibold transition-all ${
                   type === 'income'
                     ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
                     : 'text-text-muted hover:text-text-main'
@@ -157,12 +157,12 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
             </div>
 
             {/* Prominent Amount Input */}
-            <div className="bg-dark-secondary p-4 rounded-2xl border border-dark-border">
-              <label className="block text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2">
-                Amount (INR ₹)
+            <div className="bg-dark-secondary p-4 rounded-xl border border-dark-border">
+              <label className="block text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                Amount
               </label>
               <div className="relative flex items-center">
-                <span className="text-2xl font-bold text-text-muted mr-2">₹</span>
+                <span className="text-2xl font-bold font-mono text-text-muted mr-2">₹</span>
                 <input
                   type="number"
                   step="any"
@@ -171,19 +171,19 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full bg-transparent text-3xl font-extrabold text-text-main placeholder:text-text-subtle focus:outline-none"
+                  className="w-full bg-transparent text-3xl font-extrabold font-mono tabular-nums text-text-main placeholder:text-text-muted focus:outline-none"
                 />
               </div>
 
               {/* Quick Stepper Chips */}
               <div className="flex items-center gap-2 mt-3 pt-3 border-t border-dark-border/60 overflow-x-auto">
-                <span className="text-[10px] uppercase font-bold text-text-subtle mr-1">Quick:</span>
+                <span className="text-[10px] uppercase font-bold text-text-muted mr-1">Quick:</span>
                 {[50, 100, 200, 500, 1000].map((val) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => handleQuickAddAmount(val)}
-                    className="px-2.5 py-1 rounded-md text-xs font-semibold bg-dark-card border border-dark-border hover:border-brand-blue/40 text-text-secondary hover:text-text-main transition-colors shrink-0"
+                    className="px-2.5 py-1 rounded-md text-xs font-semibold font-mono bg-dark-card border border-dark-border hover:border-emerald-500/40 text-text-secondary hover:text-text-main transition-colors shrink-0"
                   >
                     +₹{val}
                   </button>
@@ -199,10 +199,10 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
               <input
                 type="text"
                 required
-                placeholder={type === 'expense' ? 'e.g. Canteen Lunch, Metro Pass, Books' : 'e.g. Monthly Allowance, Internship'}
+                placeholder={type === 'expense' ? 'e.g. Canteen Lunch, Metro Pass, Books' : 'e.g. Monthly Allowance, Freelancing'}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main placeholder:text-text-subtle focus:outline-none focus:border-brand-blue text-sm transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 text-sm transition-colors"
               />
             </div>
 
@@ -219,10 +219,10 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
                       key={cat}
                       type="button"
                       onClick={() => setCategory(cat)}
-                      className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg border text-center transition-all ${
                         isSelected
-                          ? 'bg-brand-blue/15 border-brand-blue text-text-main shadow-sm'
-                          : 'bg-dark-secondary border-dark-border text-text-secondary hover:border-dark-border-hover'
+                          ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-sm'
+                          : 'bg-dark-secondary border-dark-border text-text-secondary hover:border-dark-border'
                       }`}
                     >
                       <CategoryIcon category={cat} size="sm" className="mb-1" />
@@ -239,15 +239,13 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
                 <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
                   Date
                 </label>
-                <div className="relative flex items-center">
-                  <input
-                    type="date"
-                    required
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
-                  />
-                </div>
+                <input
+                  type="date"
+                  required
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
+                />
               </div>
 
               <div>
@@ -257,7 +255,7 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                 >
                   {PAYMENT_METHODS.map((m) => (
                     <option key={m} value={m} className="bg-dark-card text-text-main">
@@ -271,19 +269,19 @@ export default function AddTransactionModal({ isOpen, onClose, initialData = nul
             {/* Description (Optional) */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
-                Note / Description <span className="text-text-subtle font-normal">(Optional)</span>
+                Note / Description <span className="text-text-muted font-normal">(Optional)</span>
               </label>
               <input
                 type="text"
-                placeholder="Add any extra notes..."
+                placeholder="Add any additional notes..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-main placeholder:text-text-subtle focus:outline-none focus:border-brand-blue text-xs transition-colors"
+                className="w-full px-4 py-2 rounded-lg bg-dark-secondary border border-dark-border text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 text-xs transition-colors"
               />
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium">
+              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 font-medium">
                 {error}
               </div>
             )}

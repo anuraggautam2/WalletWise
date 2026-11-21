@@ -102,7 +102,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
   const uniqueCategories = Array.from(new Set(allCategories))
 
   return (
-    <div className="space-y-6 animate-fade-up">
+    <div className="space-y-6 animate-fade-in">
       {/* Top Controls: Search, Filters & Action */}
       <Card className="p-4 sm:p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -117,7 +117,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                 setSearch(e.target.value)
                 setPage(1)
               }}
-              className="w-full pl-9 pr-8 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs sm:text-sm placeholder:text-text-subtle focus:outline-none focus:border-brand-blue transition-colors"
+              className="w-full pl-9 pr-8 py-2 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs sm:text-sm placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             />
             {search && (
               <button
@@ -129,7 +129,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
             )}
           </div>
 
-          {/* Filter Pills */}
+          {/* Filter Controls */}
           <div className="flex flex-wrap items-center gap-2">
             {/* Type selector */}
             <select
@@ -138,7 +138,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                 setType(e.target.value)
                 setPage(1)
               }}
-              className="px-3 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
+              className="px-3 py-2 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             >
               <option value="All">All Types</option>
               <option value="expense">Expenses Only</option>
@@ -152,7 +152,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                 setDateRange(e.target.value)
                 setPage(1)
               }}
-              className="px-3 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
+              className="px-3 py-2 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             >
               <option value="all">All Dates</option>
               <option value="month">This Month</option>
@@ -167,7 +167,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                 setCategory(e.target.value)
                 setPage(1)
               }}
-              className="px-3 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors max-w-[150px]"
+              className="px-3 py-2 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors max-w-[150px]"
             >
               {uniqueCategories.map((c) => (
                 <option key={c} value={c}>
@@ -181,7 +181,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
               onClick={() => {
                 setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
               }}
-              className="px-3 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-secondary hover:text-text-main text-xs flex items-center gap-1.5 transition-colors"
+              className="px-3 py-2 rounded-lg bg-dark-secondary border border-dark-border text-text-secondary hover:text-text-main text-xs flex items-center gap-1.5 transition-colors"
               title="Toggle sort direction"
             >
               <ArrowUpDown className="w-3.5 h-3.5" />
@@ -190,7 +190,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
 
             {/* Export CSV */}
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleExportCSV}
               disabled={transactions.length === 0}
@@ -200,7 +200,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
               <span className="hidden sm:inline">CSV</span>
             </Button>
 
-            {/* Add Expense Button */}
+            {/* Add Record Button */}
             <Button
               variant="primary"
               size="sm"
@@ -267,7 +267,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                     </td>
 
                     {/* Amount */}
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-extrabold text-sm">
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-extrabold font-mono tabular-nums text-sm">
                       <span className={tx.type === 'income' ? 'text-emerald-400' : 'text-text-main'}>
                         {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
                       </span>
@@ -278,14 +278,14 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                       <div className="flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => onEditTransaction(tx)}
-                          className="p-1.5 rounded-lg text-text-muted hover:text-brand-blue-light hover:bg-dark-secondary transition-colors"
+                          className="p-1.5 rounded-lg text-text-muted hover:text-emerald-400 hover:bg-dark-secondary transition-colors"
                           title="Edit transaction"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setDeleteTargetId(tx._id)}
-                          className="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          className="p-1.5 rounded-lg text-text-muted hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                           title="Delete transaction"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -310,12 +310,12 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
         {pagination.totalPages > 1 && (
           <div className="p-4 bg-dark-secondary/60 border-t border-dark-border flex items-center justify-between text-xs text-text-muted">
             <span>
-              Showing page <strong className="text-text-main">{pagination.page}</strong> of{' '}
-              <strong className="text-text-main">{pagination.totalPages}</strong> ({pagination.total} total)
+              Showing page <strong className="text-text-main font-mono">{pagination.page}</strong> of{' '}
+              <strong className="text-text-main font-mono">{pagination.totalPages}</strong> ({pagination.total} total)
             </span>
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
@@ -323,7 +323,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                 Previous
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 disabled={page >= pagination.totalPages}
                 onClick={() => setPage(page + 1)}

@@ -42,9 +42,9 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
     switch (status) {
       case 'exceeded':
         return {
-          barColor: 'bg-red-500',
-          textColor: 'text-red-400',
-          bgColor: 'bg-red-500/10 border-red-500/20',
+          barColor: 'bg-rose-500',
+          textColor: 'text-rose-400',
+          bgColor: 'bg-rose-500/10 border-rose-500/20',
           label: 'Budget Exceeded',
         }
       case 'warning':
@@ -56,16 +56,16 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
         }
       default:
         return {
-          barColor: 'bg-brand-blue',
-          textColor: 'text-brand-blue-light',
-          bgColor: 'bg-blue-500/10 border-blue-500/20',
+          barColor: 'bg-emerald-500',
+          textColor: 'text-emerald-400',
+          bgColor: 'bg-emerald-500/10 border-emerald-500/20',
           label: 'On Track',
         }
     }
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-up">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       {/* Top Banner & Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -73,7 +73,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
             Monthly Budget Targets
           </h2>
           <p className="text-xs sm:text-sm text-text-secondary mt-0.5">
-            Set overall and category spending boundaries to maintain healthy student pacing.
+            Set overall and category spending boundaries to maintain disciplined pacing.
           </p>
         </div>
 
@@ -85,17 +85,17 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
 
       {/* Main Overall Monthly Budget Card */}
       {overall ? (
-        <Card className="p-6 sm:p-8" glow glowColor="blue">
+        <Card className="p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-dark-border">
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-brand-blue/15 text-brand-blue-light flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
                 <Target className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
                   Overall Monthly Allowance Limit
                 </span>
-                <h3 className="text-2xl font-extrabold text-text-main mt-0.5">
+                <h3 className="text-2xl font-extrabold font-mono tabular-nums text-text-main mt-0.5">
                   {formatCurrency(overall.amount)}
                 </h3>
               </div>
@@ -103,7 +103,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
 
             <div className="flex items-center gap-3">
               <span
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${getStatusMeta(overall.status).bgColor} ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold border font-mono tabular-nums ${getStatusMeta(overall.status).bgColor} ${
                   getStatusMeta(overall.status).textColor
                 }`}
               >
@@ -111,7 +111,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
               </span>
               <button
                 onClick={() => setDeleteTargetId(overall._id)}
-                className="p-2 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                className="p-2 rounded-lg text-text-muted hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                 title="Remove budget target"
               >
                 <Trash2 className="w-4 h-4" />
@@ -121,7 +121,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
 
           {/* Progress Bar & Details */}
           <div className="mt-6 space-y-2">
-            <div className="flex justify-between text-xs font-medium">
+            <div className="flex justify-between text-xs font-medium font-mono tabular-nums">
               <span className="text-text-secondary">
                 Spent: <strong className="text-text-main font-bold">{formatCurrency(overall.spent)}</strong>
               </span>
@@ -139,26 +139,26 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
           </div>
 
           {/* Pacing Advice & Timeline Progress */}
-          <div className="mt-6 p-4 rounded-xl bg-dark-secondary/60 border border-dark-border/60 space-y-2">
+          <div className="mt-6 p-4 rounded-lg bg-dark-secondary/60 border border-dark-border/60 space-y-2">
             <div className="flex items-center justify-between text-[11px] text-text-muted">
               <span>Month Timeline: Day {currentDay} of {daysInMonth} ({monthProgress}%)</span>
-              <span className={overall.percentage > monthProgress ? 'text-amber-400 font-semibold' : 'text-emerald-400 font-semibold'}>
-                {overall.percentage > monthProgress ? `${overall.percentage - monthProgress}% faster than timeline` : `${monthProgress - overall.percentage}% buffer remaining`}
+              <span className={`font-mono font-semibold ${overall.percentage > monthProgress ? 'text-amber-400' : 'text-emerald-400'}`}>
+                {overall.percentage > monthProgress ? `${overall.percentage - monthProgress}% ahead of timeline` : `${monthProgress - overall.percentage}% buffer remaining`}
               </span>
             </div>
             <div className="w-full bg-dark-card h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-purple-500/60 h-1.5 rounded-full"
+                className="bg-emerald-500/40 h-1.5 rounded-full"
                 style={{ width: `${monthProgress}%` }}
                 title="Current day in month"
               />
             </div>
             <div className="flex items-start gap-3 pt-1">
-              <Info className="w-4 h-4 text-brand-blue-light mt-0.5 shrink-0" />
+              <Info className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
               <p className="text-xs text-text-secondary leading-relaxed">
                 {overall.percentage >= 100 ? (
-                  <span className="text-red-400 font-semibold">
-                    Alert: You have exceeded your overall monthly budget by {formatCurrency(overall.spent - overall.amount)}. Consider pausing non-essential spending.
+                  <span className="text-rose-400 font-semibold">
+                    Alert: You have exceeded your overall monthly budget by {formatCurrency(overall.spent - overall.amount)}. Consider pausing non-essential expenditures.
                   </span>
                 ) : overall.percentage >= 80 ? (
                   <span className="text-amber-400 font-semibold">
@@ -166,7 +166,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
                   </span>
                 ) : (
                   <span>
-                    Great job! You are pacing well within your monthly allocation with <strong>{formatCurrency(overall.remaining)}</strong> remaining safe spend.
+                    Well paced! You are within your monthly allocation with <strong className="font-mono text-emerald-400">{formatCurrency(overall.remaining)}</strong> remaining safe spend.
                   </span>
                 )}
               </p>
@@ -176,12 +176,12 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
       ) : (
         /* Empty Overall Budget Prompt */
         <Card className="p-8 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-brand-blue/15 text-brand-blue-light flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3">
             <Target className="w-6 h-6" />
           </div>
           <h3 className="text-lg font-bold text-text-main">No Monthly Budget Configured</h3>
           <p className="text-xs sm:text-sm text-text-muted max-w-sm mx-auto mt-1 leading-relaxed">
-            Set an overall monthly spending allowance to track your daily progress and get timely pacing warnings.
+            Set an overall monthly spending allowance to track your daily progress and receive pacing warnings.
           </p>
           <div className="mt-5">
             <Button variant="primary" size="sm" onClick={onOpenAddBudgetModal}>
@@ -198,7 +198,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
           <h3 className="text-base sm:text-lg font-bold text-text-main">
             Category Spending Limits ({categoryBudgets.length})
           </h3>
-          <Button variant="outline" size="sm" onClick={onOpenAddBudgetModal}>
+          <Button variant="secondary" size="sm" onClick={onOpenAddBudgetModal}>
             <Plus className="w-3.5 h-3.5" />
             <span>Add Category Limit</span>
           </Button>
@@ -216,12 +216,12 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
                         <CategoryIcon category={b.category} size="md" />
                         <div>
                           <h4 className="text-sm font-bold text-text-main leading-tight">{b.category}</h4>
-                          <span className="text-[11px] text-text-muted">Target: {formatCurrency(b.amount)}</span>
+                          <span className="text-[11px] text-text-muted font-mono">Target: {formatCurrency(b.amount)}</span>
                         </div>
                       </div>
                       <button
                         onClick={() => setDeleteTargetId(b._id)}
-                        className="p-1 rounded text-text-muted hover:text-red-400 transition-colors"
+                        className="p-1 rounded text-text-muted hover:text-rose-400 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -229,7 +229,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
 
                     {/* Progress Bar */}
                     <div className="space-y-1.5 mt-2">
-                      <div className="flex justify-between text-xs">
+                      <div className="flex justify-between text-xs font-mono tabular-nums">
                         <span className="text-text-muted">Spent: {formatCurrency(b.spent)}</span>
                         <span className={`font-bold ${meta.textColor}`}>{b.percentage}%</span>
                       </div>
@@ -242,7 +242,7 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-dark-border/60 flex items-center justify-between text-xs">
+                  <div className="mt-4 pt-3 border-t border-dark-border/60 flex items-center justify-between text-xs font-mono tabular-nums">
                     <span className="text-text-muted">Remaining:</span>
                     <span className={`font-bold ${meta.textColor}`}>{formatCurrency(b.remaining)}</span>
                   </div>

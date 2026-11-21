@@ -7,27 +7,23 @@ export default function FAQSection() {
   const faqs = [
     {
       question: 'What is WalletWise?',
-      answer: 'WalletWise is a modern student expense tracking and budgeting web application. It helps college and university students record daily expenses, set realistic monthly category budgets, and understand their spending habits with zero unnecessary complexity.'
+      answer: 'WalletWise is a modern personal finance and expense tracking application designed specifically for students. It enables you to record daily expenditures, maintain monthly category limits, allocate savings for milestones, and review your spending analytics with zero bookkeeping hassle.'
     },
     {
-      question: 'Who can use WalletWise?',
-      answer: 'WalletWise is primarily designed for students—undergraduates, postgraduates, and campus scholars—managing their allowances or part-time earnings. Anyone looking for a straightforward, clutter-free budgeting tool can also benefit from it.'
+      question: 'How does monthly budget pacing work?',
+      answer: 'WalletWise computes your monthly allowance against the current day of the month. It calculates your safe daily burn rate and provides warnings if your spending pace exceeds timeline targets, helping you avoid running out of funds before the 25th.'
     },
     {
-      question: 'Can I track daily expenses?',
-      answer: 'Yes! You can record your daily purchases in seconds—from quick coffee or tea and canteen meals to textbooks, printouts, and auto rides—and categorize each transaction cleanly.'
+      question: 'Can I export my financial data?',
+      answer: 'Yes. WalletWise supports instant one-click CSV exports of your filtered transactions and comprehensive monthly analytics reports, giving you complete ownership of your personal financial records.'
     },
     {
-      question: 'Can I create monthly budgets?',
-      answer: 'Yes. WalletWise allows you to establish total monthly spending limits as well as specific allowances for categories like Food, Books & Academics, Transit, and Leisure, complete with pacing indicators to help you stay on track.'
+      question: 'Can I track savings goals for specific milestones?',
+      answer: 'Yes. You can create dedicated goals for semester tuition fees, laptop upgrades, academic certifications, travel, or an emergency buffer. Track funded percentages and make incremental deposits at any time.'
     },
     {
-      question: 'Can I view spending reports?',
-      answer: 'Yes. WalletWise provides visual charts and monthly summaries showing where your money goes, highlighting peak spending days and category allocations so you can spot recurring leaks.'
-    },
-    {
-      question: 'Is WalletWise designed for students?',
-      answer: 'Absolutely. Unlike complex corporate accounting software or banking apps packed with ads and loans, WalletWise focuses exclusively on the needs of students: fast logging, relatable categories, and actionable spending awareness.'
+      question: 'Is my data private and secure?',
+      answer: 'Yes. Your financial information is linked exclusively to your authenticated user account. WalletWise does not sell your data or serve third-party financial loan advertisements.'
     }
   ]
 
@@ -36,64 +32,56 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="relative py-20 sm:py-28 overflow-hidden" style={{ background: '#0D1424' }}>
-      <div className="absolute top-1/3 right-0 w-[400px] h-[300px] bg-radial-violet opacity-30 -z-0" />
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="faq" className="py-20 sm:py-28 bg-dark relative border-t border-dark-border">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center space-y-4 mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider"
-            style={{ background: 'rgba(167, 139, 250, 0.08)', border: '1px solid rgba(167, 139, 250, 0.15)', color: '#A78BFA' }}
-          >
-            Got Questions?
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            Common Questions
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-primary">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-main">
             Frequently Asked Questions
           </h2>
 
           <p className="text-base sm:text-lg text-text-secondary max-w-xl mx-auto">
-            Everything you need to know about the WalletWise student expense platform.
+            Everything you need to know about the WalletWise financial ledger.
           </p>
         </div>
 
         {/* Accordion */}
-        <div className="space-y-3.5">
+        <div className="space-y-3">
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx
             return (
               <div
                 key={idx}
-                className="rounded-2xl overflow-hidden transition-all duration-200"
-                style={{
-                  background: isOpen ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.035)',
-                  border: `1px solid ${isOpen ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}`,
-                }}
+                className={`rounded-lg overflow-hidden transition-all duration-150 border ${
+                  isOpen
+                    ? 'bg-dark-card border-emerald-500/30'
+                    : 'bg-dark-card/60 border-dark-border hover:border-dark-border'
+                }`}
               >
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full py-4 sm:py-5 px-5 sm:px-6 text-left flex items-center justify-between gap-4 focus:outline-none"
+                  className="w-full py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 focus:outline-none"
                 >
-                  <span className="text-base sm:text-lg font-bold text-text-primary">
+                  <span className="text-base font-bold text-text-main">
                     {faq.question}
                   </span>
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200"
-                    style={{
-                      transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                      background: isOpen ? '#2563EB' : 'rgba(255,255,255,0.06)',
-                    }}
+                    className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 bg-emerald-500/10 text-emerald-400' : 'bg-dark-secondary text-text-muted'
+                    }`}
                   >
-                    <ChevronDown className={`w-4 h-4 stroke-[2.5] ${isOpen ? 'text-white' : 'text-text-muted'}`} />
+                    <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 sm:px-6 pb-5 pt-1 text-sm sm:text-base text-text-secondary leading-relaxed"
-                    style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-                  >
+                  <div className="px-5 sm:px-6 pb-5 pt-1 text-xs sm:text-sm text-text-secondary leading-relaxed border-t border-dark-border/60">
                     {faq.answer}
                   </div>
                 )}

@@ -9,9 +9,14 @@ export default function ConfirmDialog({
   message = 'Are you sure you want to remove this record? This action cannot be undone.',
   onConfirm,
   onCancel,
+  onClose,
+  confirmText = 'Delete',
   loading = false,
+  isDanger = true,
 }) {
   if (!isOpen) return null
+
+  const handleCancel = onCancel || onClose
 
   return (
     <AnimatePresence>
@@ -21,35 +26,36 @@ export default function ConfirmDialog({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onCancel}
-          className="absolute inset-0 bg-[#060A14]/80 backdrop-blur-md"
+          onClick={handleCancel}
+          className="absolute inset-0 bg-black/75 backdrop-blur-sm"
         />
 
         {/* Dialog Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="relative w-full max-w-sm bg-dark-card border border-dark-border rounded-3xl p-6 shadow-2xl text-center"
+          exit={{ opacity: 0, scale: 0.96, y: 10 }}
+          transition={{ duration: 0.18 }}
+          className="relative w-full max-w-sm bg-dark-card border border-dark-border rounded-xl p-6 shadow-2xl text-center"
         >
-          <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+          <div className="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center mx-auto mb-4">
             <AlertTriangle className="w-6 h-6" />
           </div>
 
-          <h3 className="text-lg font-bold text-text-main">{title}</h3>
-          <p className="mt-2 text-xs sm:text-sm text-text-secondary leading-relaxed">{message}</p>
+          <h3 className="text-base font-bold text-text-main">{title}</h3>
+          <p className="mt-2 text-xs text-text-secondary leading-relaxed">{message}</p>
 
           <div className="mt-6 flex items-center justify-center gap-3">
-            <Button variant="ghost" onClick={onCancel} disabled={loading} className="w-full">
+            <Button variant="ghost" onClick={handleCancel} disabled={loading} className="w-full">
               Cancel
             </Button>
             <Button
-              variant="danger"
+              variant={isDanger ? 'danger' : 'primary'}
               loading={loading}
               onClick={onConfirm}
-              className="w-full bg-red-600 hover:bg-red-700 text-white border-transparent"
+              className="w-full"
             >
-              Delete
+              {confirmText}
             </Button>
           </div>
         </motion.div>

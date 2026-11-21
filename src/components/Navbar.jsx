@@ -17,10 +17,10 @@ export default function Navbar({ onGetStarted, onNavigate }) {
   }, [])
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
     { name: 'Features', href: '#features' },
     { name: 'How It Works', href: '#how-it-works' },
-    { name: 'About', href: '#about' },
+    { name: 'Product', href: '#product' },
+    { name: 'FAQ', href: '#faq' },
   ]
 
   const handleNavClick = (e, href) => {
@@ -34,17 +34,17 @@ export default function Navbar({ onGetStarted, onNavigate }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-200 ${
         isScrolled ? 'py-2.5' : 'py-4 sm:py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className="rounded-2xl px-5 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between transition-all duration-300"
+          className="rounded-xl px-5 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between transition-all duration-200"
           style={{
-            background: 'rgba(13, 20, 36, 0.82)',
-            backdropFilter: 'blur(18px)',
-            WebkitBackdropFilter: 'blur(18px)',
+            background: 'rgba(9, 10, 15, 0.88)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
           }}
         >
@@ -54,15 +54,15 @@ export default function Navbar({ onGetStarted, onNavigate }) {
             onClick={(e) => handleNavClick(e, '#home')}
             className="flex items-center gap-3 group focus:outline-none"
           >
-            <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center text-white shadow-fintech-glow-blue group-hover:scale-105 transition-transform duration-200">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
               <Wallet className="w-4 h-4" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg tracking-tight text-text-main group-hover:text-brand-blue-light transition-colors">
+              <span className="font-bold text-base tracking-tight text-text-main group-hover:text-emerald-400 transition-colors">
                 WalletWise
               </span>
               <span className="text-[9px] uppercase font-semibold tracking-[0.2em] text-text-muted -mt-0.5 hidden sm:block">
-                Track Smart &bull; Spend Better
+                Financial Ledger
               </span>
             </div>
           </a>
@@ -74,7 +74,7 @@ export default function Navbar({ onGetStarted, onNavigate }) {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-xs sm:text-sm font-medium text-text-secondary hover:text-text-main transition-colors relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue hover:after:w-full after:transition-all after:duration-200"
+                className="text-xs sm:text-sm font-medium text-text-secondary hover:text-text-main transition-colors relative py-1"
               >
                 {link.name}
               </a>
@@ -88,7 +88,6 @@ export default function Navbar({ onGetStarted, onNavigate }) {
                 variant="primary"
                 size="sm"
                 onClick={() => onNavigate('dashboard')}
-                className="shadow-md"
               >
                 <LayoutDashboard className="w-4 h-4" />
                 <span>Open Dashboard</span>
@@ -107,7 +106,6 @@ export default function Navbar({ onGetStarted, onNavigate }) {
                   variant="primary"
                   size="sm"
                   onClick={() => onNavigate('register')}
-                  className="shadow-md"
                 >
                   <span>Get Started</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -121,7 +119,7 @@ export default function Navbar({ onGetStarted, onNavigate }) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-text-secondary hover:text-text-main hover:bg-dark-card border border-dark-border transition-colors"
+              className="p-2 rounded-lg text-text-secondary hover:text-text-main hover:bg-dark-secondary border border-dark-border transition-colors"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -131,9 +129,9 @@ export default function Navbar({ onGetStarted, onNavigate }) {
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
           <div
-            className="md:hidden mt-2 rounded-2xl px-4 pt-3 pb-5 space-y-3"
+            className="md:hidden mt-2 rounded-xl px-4 pt-3 pb-5 space-y-3"
             style={{
-              background: 'rgba(13, 20, 36, 0.95)',
+              background: 'rgba(9, 10, 15, 0.96)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}
@@ -144,7 +142,7 @@ export default function Navbar({ onGetStarted, onNavigate }) {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="px-3 py-2.5 rounded-lg text-sm font-medium text-text-secondary hover:text-text-main hover:bg-dark-card transition-colors"
+                  className="px-3 py-2.5 rounded-lg text-sm font-medium text-text-secondary hover:text-text-main hover:bg-dark-secondary transition-colors"
                 >
                   {link.name}
                 </a>
@@ -167,7 +165,7 @@ export default function Navbar({ onGetStarted, onNavigate }) {
               ) : (
                 <>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => {
                       setMobileMenuOpen(false)
                       onNavigate('login')

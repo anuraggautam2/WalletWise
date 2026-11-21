@@ -61,27 +61,28 @@ export default function AddBudgetModal({ isOpen, onClose }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-[#060A14]/80 backdrop-blur-md"
+          className="absolute inset-0 bg-black/75 backdrop-blur-sm"
         />
 
         {/* Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          className="relative w-full max-w-md bg-dark-card border border-dark-border rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden"
+          exit={{ opacity: 0, scale: 0.96, y: 10 }}
+          transition={{ duration: 0.18 }}
+          className="relative w-full max-w-md bg-dark-card border border-dark-border rounded-xl p-6 sm:p-7 shadow-2xl overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-dark-border">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-brand-blue/15 flex items-center justify-center text-brand-blue-light">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
                 <Target className="w-4 h-4" />
               </div>
               <h3 className="text-lg font-bold text-text-main">Set Budget Target</h3>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl text-text-muted hover:text-text-main hover:bg-dark-card-elevated transition-colors"
+              className="p-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-secondary transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -93,13 +94,13 @@ export default function AddBudgetModal({ isOpen, onClose }) {
               <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
                 Budget Scope
               </label>
-              <div className="grid grid-cols-2 p-1 rounded-xl bg-dark-secondary border border-dark-border">
+              <div className="grid grid-cols-2 p-1 rounded-lg bg-dark-secondary border border-dark-border">
                 <button
                   type="button"
                   onClick={() => setBudgetType('overall')}
-                  className={`py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`py-2 rounded-md text-xs font-semibold transition-all ${
                     budgetType === 'overall'
-                      ? 'bg-brand-blue text-white shadow-sm'
+                      ? 'bg-emerald-600 text-white shadow-sm'
                       : 'text-text-muted hover:text-text-main'
                   }`}
                 >
@@ -108,9 +109,9 @@ export default function AddBudgetModal({ isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={() => setBudgetType('category')}
-                  className={`py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`py-2 rounded-md text-xs font-semibold transition-all ${
                     budgetType === 'category'
-                      ? 'bg-brand-blue text-white shadow-sm'
+                      ? 'bg-emerald-600 text-white shadow-sm'
                       : 'text-text-muted hover:text-text-main'
                   }`}
                 >
@@ -128,7 +129,7 @@ export default function AddBudgetModal({ isOpen, onClose }) {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+                  className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                 >
                   {EXPENSE_CATEGORIES.map((c) => (
                     <option key={c} value={c} className="bg-dark-card text-text-main">
@@ -142,10 +143,10 @@ export default function AddBudgetModal({ isOpen, onClose }) {
             {/* Amount */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
-                Target Budget Limit (INR ₹)
+                Target Budget Limit
               </label>
               <div className="relative flex items-center">
-                <span className="absolute left-4 font-bold text-text-muted">₹</span>
+                <span className="absolute left-4 font-bold font-mono text-text-muted">₹</span>
                 <input
                   type="number"
                   step="any"
@@ -153,7 +154,7 @@ export default function AddBudgetModal({ isOpen, onClose }) {
                   placeholder="e.g. 5000"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full pl-9 pr-4 py-3 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-lg font-bold focus:outline-none focus:border-brand-blue transition-colors"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main font-mono tabular-nums text-lg font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
             </div>
@@ -167,7 +168,7 @@ export default function AddBudgetModal({ isOpen, onClose }) {
                 <select
                   value={month}
                   onChange={(e) => setMonth(parseInt(e.target.value))}
-                  className="w-full px-3 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
+                  className="w-full px-3 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                 >
                   {months.map((m, idx) => (
                     <option key={m} value={idx + 1} className="bg-dark-card text-text-main">
@@ -185,13 +186,13 @@ export default function AddBudgetModal({ isOpen, onClose }) {
                   type="number"
                   value={year}
                   onChange={(e) => setYear(parseInt(e.target.value))}
-                  className="w-full px-3 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
+                  className="w-full px-3 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors font-mono"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium">
+              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 font-medium">
                 {error}
               </div>
             )}

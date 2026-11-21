@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
   PiggyBank,
   Plus,
@@ -9,7 +8,6 @@ import {
   Sparkles,
   ArrowUpRight,
   TrendingUp,
-  MoreVertical,
   Trash2,
   Edit2,
   ShieldCheck,
@@ -59,15 +57,15 @@ export default function SavingsTab() {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       {/* Header & Quick Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-text-main tracking-tight">
             Savings Goals & Milestones
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Build discipline by allocating funds towards specific student milestones and emergency reserves.
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">
+            Build disciplined reserves by allocating funds towards specific milestones.
           </p>
         </div>
 
@@ -80,62 +78,62 @@ export default function SavingsTab() {
       {/* 4 Summary Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Saved */}
-        <div className="p-5 rounded-2xl bg-[#0E1420] border border-white/[0.08] relative overflow-hidden">
+        <Card className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Total Saved</span>
+            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Total Saved</span>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-slate-100 mt-3">
+          <p className="text-2xl font-extrabold font-mono tabular-nums text-text-main mt-3">
             {formatCurrency(savingsSummary.totalSaved)}
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">Accumulated student funds</p>
-        </div>
+          <p className="text-[11px] text-text-muted mt-1">Accumulated reserves</p>
+        </Card>
 
         {/* Total Target */}
-        <div className="p-5 rounded-2xl bg-[#0E1420] border border-white/[0.08] relative overflow-hidden">
+        <Card className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Total Target</span>
-            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Total Target</span>
+            <div className="w-8 h-8 rounded-lg bg-dark-secondary border border-dark-border flex items-center justify-center text-emerald-400">
               <Target className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-slate-100 mt-3">
+          <p className="text-2xl font-extrabold font-mono tabular-nums text-text-main mt-3">
             {formatCurrency(savingsSummary.totalTarget)}
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">Across all planned milestones</p>
-        </div>
+          <p className="text-[11px] text-text-muted mt-1">Across all planned milestones</p>
+        </Card>
 
         {/* Goals Progress */}
-        <div className="p-5 rounded-2xl bg-[#0E1420] border border-white/[0.08] relative overflow-hidden">
+        <Card className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Overall Progress</span>
-            <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Overall Progress</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-slate-100 mt-3">
+          <p className="text-2xl font-extrabold font-mono tabular-nums text-emerald-400 mt-3">
             {savingsSummary.overallPercentage}%
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-text-muted mt-1 font-mono">
             {formatCurrency(Math.max(0, savingsSummary.totalTarget - savingsSummary.totalSaved))} remaining
           </p>
-        </div>
+        </Card>
 
         {/* Completed Milestones */}
-        <div className="p-5 rounded-2xl bg-[#0E1420] border border-white/[0.08] relative overflow-hidden">
+        <Card className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Milestones Reached</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Milestones Reached</span>
+            <div className="w-8 h-8 rounded-lg bg-dark-secondary border border-dark-border flex items-center justify-center text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-slate-100 mt-3">
-            {savingsSummary.completedGoals} <span className="text-sm font-normal text-slate-400">/ {savingsSummary.totalGoals}</span>
+          <p className="text-2xl font-extrabold font-mono tabular-nums text-text-main mt-3">
+            {savingsSummary.completedGoals} <span className="text-sm font-normal text-text-muted font-sans">/ {savingsSummary.totalGoals}</span>
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">Goals fully funded</p>
-        </div>
+          <p className="text-[11px] text-text-muted mt-1">Goals fully funded</p>
+        </Card>
       </div>
 
       {/* Goals Grid */}
@@ -148,36 +146,28 @@ export default function SavingsTab() {
             const daysLeft = getDaysLeft(goal.targetDate)
 
             return (
-              <motion.div
+              <Card
                 key={goal._id}
-                layout
-                className="p-5 rounded-2xl bg-[#0E1420] border border-white/[0.08] hover:border-white/[0.14] transition-all flex flex-col justify-between"
+                className="p-5 flex flex-col justify-between hover:border-emerald-500/30 transition-colors"
               >
                 <div>
                   {/* Top Row: Category Pill & Menu */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span
-                      className="px-2.5 py-1 rounded-md text-[11px] font-medium border"
-                      style={{
-                        backgroundColor: `${goal.color || '#3B82F6'}15`,
-                        borderColor: `${goal.color || '#3B82F6'}30`,
-                        color: goal.color || '#60A5FA'
-                      }}
-                    >
-                      {goal.category || 'Goal'}
+                    <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                      {goal.category || 'Savings Goal'}
                     </span>
 
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleEdit(goal)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-colors"
+                        className="p-1.5 rounded-lg text-text-muted hover:text-emerald-400 hover:bg-dark-secondary transition-colors"
                         title="Edit Goal"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => setDeleteConfirmGoal(goal)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                        className="p-1.5 rounded-lg text-text-muted hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                         title="Delete Goal"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -186,11 +176,11 @@ export default function SavingsTab() {
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="text-base font-semibold text-slate-100 tracking-tight leading-snug">
+                  <h3 className="text-base font-bold text-text-main tracking-tight leading-snug">
                     {goal.title}
                   </h3>
                   {goal.description && (
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-text-secondary mt-1 line-clamp-2 leading-relaxed">
                       {goal.description}
                     </p>
                   )}
@@ -198,14 +188,14 @@ export default function SavingsTab() {
                   {/* Amounts */}
                   <div className="mt-4 flex items-baseline justify-between">
                     <div>
-                      <p className="text-[11px] text-slate-400 uppercase tracking-wider">Saved</p>
-                      <p className="text-lg font-bold font-mono text-slate-100 mt-0.5">
+                      <p className="text-[11px] text-text-muted uppercase tracking-wider font-semibold">Saved</p>
+                      <p className="text-lg font-bold font-mono tabular-nums text-text-main mt-0.5">
                         {formatCurrency(goal.currentAmount)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[11px] text-slate-400 uppercase tracking-wider">Target</p>
-                      <p className="text-sm font-semibold font-mono text-slate-400 mt-0.5">
+                      <p className="text-[11px] text-text-muted uppercase tracking-wider font-semibold">Target</p>
+                      <p className="text-sm font-semibold font-mono tabular-nums text-text-muted mt-0.5">
                         {formatCurrency(goal.targetAmount)}
                       </p>
                     </div>
@@ -213,31 +203,30 @@ export default function SavingsTab() {
 
                   {/* Visual Progress Bar */}
                   <div className="mt-3">
-                    <div className="h-2 w-full rounded-full bg-white/[0.06] overflow-hidden">
+                    <div className="h-2 w-full rounded-full bg-dark-secondary overflow-hidden">
                       <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                          width: `${percent}%`,
-                          backgroundColor: isCompleted ? '#10B981' : (goal.color || '#3B82F6')
-                        }}
+                        className="h-full rounded-full transition-all duration-500 bg-emerald-500"
+                        style={{ width: `${percent}%` }}
                       />
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1.5 font-medium">
+                    <div className="flex items-center justify-between text-[11px] text-text-muted mt-1.5 font-medium font-mono tabular-nums">
                       <span>{percent}% funded</span>
-                      <span>{isCompleted ? 'Goal Reached!' : `${formatCurrency(remaining)} to go`}</span>
+                      <span className={isCompleted ? 'text-emerald-400 font-bold font-sans' : ''}>
+                        {isCompleted ? 'Goal Reached!' : `${formatCurrency(remaining)} to go`}
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Footer Meta & Deposit Action */}
-                <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between gap-3">
+                <div className="mt-5 pt-4 border-t border-dark-border/60 flex items-center justify-between gap-3">
                   {daysLeft ? (
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                      <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                    <div className="flex items-center gap-1.5 text-xs text-text-muted">
+                      <Calendar className="w-3.5 h-3.5 text-text-muted" />
                       <span>{daysLeft}</span>
                     </div>
                   ) : (
-                    <span className="text-[11px] text-slate-500">Flexible target date</span>
+                    <span className="text-[11px] text-text-muted">Flexible deadline</span>
                   )}
 
                   <Button
@@ -249,19 +238,19 @@ export default function SavingsTab() {
                     <span>{isCompleted ? 'Add More' : 'Deposit'}</span>
                   </Button>
                 </div>
-              </motion.div>
+              </Card>
             )
           })}
         </div>
       ) : (
         /* Empty State */
-        <div className="p-12 text-center rounded-2xl bg-[#0E1420] border border-white/[0.08] max-w-xl mx-auto">
-          <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mx-auto mb-4">
+        <Card className="p-12 text-center max-w-xl mx-auto">
+          <div className="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-4">
             <PiggyBank className="w-7 h-7" />
           </div>
-          <h3 className="text-base font-semibold text-slate-100">No Savings Goals Yet</h3>
-          <p className="text-xs text-slate-400 mt-1.5 max-w-sm mx-auto leading-relaxed">
-            Set aside money for a new semester laptop, course certifications, hostel deposits, or an emergency buffer.
+          <h3 className="text-base font-bold text-text-main">No Savings Goals Yet</h3>
+          <p className="text-xs text-text-muted mt-1.5 max-w-sm mx-auto leading-relaxed">
+            Set aside funds for a new laptop, academic courses, deposits, or an emergency reserve.
           </p>
           <div className="mt-5">
             <Button variant="primary" size="sm" onClick={handleCreate}>
@@ -269,7 +258,7 @@ export default function SavingsTab() {
               <span>Create Your First Goal</span>
             </Button>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Add / Edit Goal Modal */}
@@ -292,7 +281,7 @@ export default function SavingsTab() {
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         isOpen={Boolean(deleteConfirmGoal)}
-        onClose={() => setDeleteConfirmGoal(null)}
+        onCancel={() => setDeleteConfirmGoal(null)}
         onConfirm={handleDeleteConfirm}
         title="Remove Savings Goal"
         message={`Are you sure you want to remove "${deleteConfirmGoal?.title}"? Any accumulated savings will remain in your recorded transactions.`}

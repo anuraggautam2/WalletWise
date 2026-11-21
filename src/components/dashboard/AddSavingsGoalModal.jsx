@@ -15,12 +15,12 @@ const CATEGORIES = [
 ]
 
 const COLORS = [
-  '#3B82F6', // Blue
   '#10B981', // Emerald
-  '#8B5CF6', // Purple
+  '#06B6D4', // Cyan
+  '#6366F1', // Indigo
   '#F59E0B', // Amber
   '#EC4899', // Pink
-  '#06B6D4'  // Cyan
+  '#8B5CF6'  // Purple
 ]
 
 export default function AddSavingsGoalModal({ isOpen, onClose, initialData = null }) {
@@ -33,7 +33,7 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
     initialData?.targetDate ? initialData.targetDate.split('T')[0] : ''
   )
   const [category, setCategory] = useState(initialData?.category || 'Gadgets & Tech')
-  const [color, setColor] = useState(initialData?.color || '#3B82F6')
+  const [color, setColor] = useState(initialData?.color || '#10B981')
   const [description, setDescription] = useState(initialData?.description || '')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -91,34 +91,35 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-[#060A14]/80 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/75 backdrop-blur-sm"
       />
 
       {/* Modal Dialog */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        initial={{ opacity: 0, scale: 0.96, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="relative w-full max-w-lg bg-[#0E1420] border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden z-10"
+        exit={{ opacity: 0, scale: 0.96, y: 10 }}
+        transition={{ duration: 0.18 }}
+        className="relative w-full max-w-lg bg-dark-card border border-dark-border rounded-xl shadow-2xl overflow-hidden z-10"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-dark-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <PiggyBank className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-slate-100">
+              <h3 className="text-base font-bold text-text-main">
                 {initialData ? 'Edit Savings Goal' : 'Create Savings Goal'}
               </h3>
-              <p className="text-xs text-slate-400">
-                Target milestones for tech, books, trips, or emergency reserves.
+              <p className="text-xs text-text-muted">
+                Target milestones for tech, books, trips, or reserves.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/[0.06] transition-colors"
+            className="p-1.5 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-secondary transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -127,14 +128,14 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium">
+            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium">
               {error}
             </div>
           )}
 
           {/* Goal Title */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
               Goal Title <span className="text-rose-400">*</span>
             </label>
             <input
@@ -143,14 +144,14 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
               placeholder="e.g. New Coding Laptop, Semester Trip, Emergency Fund"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#141C2E] border border-white/[0.08] text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             />
           </div>
 
           {/* Amounts Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
                 Target Amount <span className="text-rose-400">*</span>
               </label>
               <div className="relative">
@@ -162,13 +163,13 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
                   placeholder="50000"
                   value={targetAmount}
                   onChange={(e) => setTargetAmount(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#141C2E] border border-white/[0.08] text-sm font-mono text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-sm font-mono tabular-nums text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
                 Initial Saved Amount
               </label>
               <input
@@ -178,7 +179,7 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
                 placeholder="0"
                 value={currentAmount}
                 onChange={(e) => setCurrentAmount(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#141C2E] border border-white/[0.08] text-sm font-mono text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-sm font-mono tabular-nums text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               />
             </div>
           </div>
@@ -186,13 +187,13 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
           {/* Category & Target Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#141C2E] border border-white/[0.08] text-sm text-slate-200 focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-sm text-text-main focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -203,21 +204,21 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
                 Target Completion Date
               </label>
               <input
                 type="date"
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#141C2E] border border-white/[0.08] text-sm text-slate-200 focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-sm text-text-main focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               />
             </div>
           </div>
 
           {/* Color Tag Selection */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
               Accent Color
             </label>
             <div className="flex items-center gap-3">
@@ -227,7 +228,7 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
                   key={c}
                   onClick={() => setColor(c)}
                   className={`w-7 h-7 rounded-full transition-transform ${
-                    color === c ? 'scale-110 ring-2 ring-white/50' : 'opacity-80 hover:opacity-100'
+                    color === c ? 'scale-110 ring-2 ring-emerald-400' : 'opacity-80 hover:opacity-100'
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -237,20 +238,20 @@ export default function AddSavingsGoalModal({ isOpen, onClose, initialData = nul
 
           {/* Notes / Description */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
-              Description (Optional)
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
+              Description <span className="text-text-muted font-normal">(Optional)</span>
             </label>
             <textarea
               rows="2"
-              placeholder="Why this milestone matters, notes, or motivation..."
+              placeholder="Milestone notes or purpose..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl bg-[#141C2E] border border-white/[0.08] text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
+              className="w-full px-3.5 py-2 rounded-lg bg-dark-secondary border border-dark-border text-xs text-text-main placeholder:text-text-muted focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors resize-none"
             />
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/[0.06]">
+          <div className="pt-2 flex items-center justify-end gap-3 border-t border-dark-border">
             <Button variant="ghost" size="sm" type="button" onClick={onClose}>
               Cancel
             </Button>

@@ -74,21 +74,21 @@ export default function SettingsTab() {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 max-w-4xl animate-fade-up">
+    <div className="space-y-6 sm:space-y-8 max-w-4xl animate-fade-in">
       {/* Header */}
       <div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-text-main tracking-tight">
           Account Settings & Security
         </h2>
         <p className="text-xs sm:text-sm text-text-secondary mt-0.5">
-          Customize your profile, display preferences, and account security.
+          Customize your profile, display preferences, and account credentials.
         </p>
       </div>
 
       {/* 1. Profile Information & Preferences */}
       <Card className="p-6 sm:p-7">
         <div className="flex items-center gap-3 pb-5 border-b border-dark-border">
-          <div className="w-9 h-9 rounded-xl bg-brand-blue/15 text-brand-blue-light flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
             <User className="w-5 h-5" />
           </div>
           <div>
@@ -109,7 +109,7 @@ export default function SettingsTab() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               />
             </div>
 
@@ -122,7 +122,7 @@ export default function SettingsTab() {
                 type="email"
                 disabled
                 value={user?.email || ''}
-                className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary/50 border border-dark-border/50 text-text-muted text-sm cursor-not-allowed select-none"
+                className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary/50 border border-dark-border/50 text-text-muted text-sm cursor-not-allowed select-none"
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function SettingsTab() {
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               >
                 <option value="INR">INR (₹) - Indian Rupee</option>
                 <option value="USD">USD ($) - US Dollar</option>
@@ -151,7 +151,7 @@ export default function SettingsTab() {
               <select
                 value={dateFormat}
                 onChange={(e) => setDateFormat(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               >
                 <option value="DD/MM/YYYY">DD/MM/YYYY (e.g. 19/11/2026)</option>
                 <option value="MM/DD/YYYY">MM/DD/YYYY (e.g. 11/19/2026)</option>
@@ -172,7 +172,7 @@ export default function SettingsTab() {
       {/* 2. Change Password */}
       <Card className="p-6 sm:p-7">
         <div className="flex items-center gap-3 pb-5 border-b border-dark-border">
-          <div className="w-9 h-9 rounded-xl bg-brand-violet/15 text-brand-violet-light flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
             <Key className="w-5 h-5" />
           </div>
           <div>
@@ -191,13 +191,13 @@ export default function SettingsTab() {
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+              className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1.5">
-              New Password <span className="text-text-subtle font-normal">(min 6 chars)</span>
+              New Password <span className="text-text-muted font-normal">(min 6 chars)</span>
             </label>
             <input
               type="password"
@@ -205,7 +205,7 @@ export default function SettingsTab() {
               minLength={6}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+              className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             />
           </div>
 
@@ -219,18 +219,18 @@ export default function SettingsTab() {
               minLength={6}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-brand-blue transition-colors"
+              className="w-full px-4 py-2.5 rounded-lg bg-dark-secondary border border-dark-border text-text-main text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
             />
           </div>
 
           {passwordError && (
-            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium">
+            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 font-medium">
               {passwordError}
             </div>
           )}
 
           {passwordSuccess && (
-            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-medium">
+            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-medium">
               {passwordSuccess}
             </div>
           )}
@@ -244,10 +244,10 @@ export default function SettingsTab() {
       </Card>
 
       {/* 3. Session & Danger Zone */}
-      <Card className="p-6 border-red-500/20 bg-red-950/10">
+      <Card className="p-6 border-rose-500/20 bg-rose-950/10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h4 className="text-sm font-bold text-red-400">Account Session</h4>
+            <h4 className="text-sm font-bold text-rose-400">Account Session</h4>
             <p className="text-xs text-text-muted mt-0.5">
               Sign out from this device to invalidate the current local session token.
             </p>

@@ -7,62 +7,62 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #080D1A;
+    background-color: #090A0F;
     color: #F8FAFC;
   }
 
   body {
-    background-color: #080D1A;
+    background-color: #090A0F;
+    color: #F8FAFC;
+    overflow-x: hidden;
   }
 
   ::selection {
-    background-color: rgba(37, 99, 235, 0.3);
-    color: #F8FAFC;
+    background-color: rgba(16, 185, 129, 0.25);
+    color: #FFFFFF;
   }
 }
 
-/* Entrance animation */
-@keyframes fadeUp {
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Restrained entrance animation */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
 .animate-fade-up {
-  animation: fadeUp 0.6s ease-out forwards;
+  animation: fadeIn 0.25s ease-out forwards;
 }
 
-.animate-fade-up-delay-1 {
-  animation: fadeUp 0.6s ease-out 0.1s forwards;
-  opacity: 0;
-}
-
-.animate-fade-up-delay-2 {
-  animation: fadeUp 0.6s ease-out 0.2s forwards;
-  opacity: 0;
-}
-
-.animate-fade-up-delay-3 {
-  animation: fadeUp 0.6s ease-out 0.3s forwards;
-  opacity: 0;
-}
-
-/* Custom dark scrollbar */
+/* Custom deep charcoal scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #080D1A;
+  background: #090A0F;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.22);
 }

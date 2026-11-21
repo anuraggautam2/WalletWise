@@ -4,12 +4,9 @@ import { TransactionProvider } from './context/TransactionContext'
 
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import ProblemSection from './components/ProblemSection'
-import SolutionSection from './components/SolutionSection'
 import Features from './components/Features'
 import ProductShowcase from './components/ProductShowcase'
 import HowItWorks from './components/HowItWorks'
-import BenefitsSection from './components/BenefitsSection'
 import FAQSection from './components/FAQSection'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
@@ -68,8 +65,13 @@ function WalletWiseApp() {
     }
   }, [isAuthenticated, loading, currentView])
 
-  const handleOpenModal = () => setModalOpen(true)
-  const handleCloseModal = () => setModalOpen(false)
+  const handleOpenModal = () => {
+    if (isAuthenticated) {
+      navigate('dashboard')
+    } else {
+      navigate('register')
+    }
+  }
 
   // Auth & Dashboard Views
   if (currentView === 'login') {
@@ -121,7 +123,7 @@ function WalletWiseApp() {
 
   // Default: Landing Page View
   return (
-    <div className="min-h-screen bg-dark text-text-primary flex flex-col font-sans">
+    <div className="min-h-screen bg-dark text-text-main flex flex-col font-sans">
       {/* 1. Navigation */}
       <Navbar onGetStarted={handleOpenModal} onNavigate={navigate} />
 
@@ -129,36 +131,27 @@ function WalletWiseApp() {
         {/* 2. Hero Section */}
         <Hero onGetStarted={handleOpenModal} onNavigate={navigate} />
 
-        {/* 3. The Problem Section */}
-        <ProblemSection />
-
-        {/* 4. The WalletWise Solution */}
-        <SolutionSection onGetStarted={handleOpenModal} onNavigate={navigate} />
-
-        {/* 5. Features Section */}
+        {/* 3. Core Feature Pillars */}
         <Features />
 
-        {/* 6. Product Showcase */}
+        {/* 4. Product Showcase */}
         <ProductShowcase onGetStarted={handleOpenModal} onNavigate={navigate} />
 
-        {/* 7. How It Works */}
+        {/* 5. How It Works */}
         <HowItWorks onGetStarted={handleOpenModal} />
 
-        {/* 8. Benefits Section */}
-        <BenefitsSection />
-
-        {/* 9. FAQ Section */}
+        {/* 6. FAQ Section */}
         <FAQSection />
 
-        {/* 10. Final Call To Action */}
+        {/* 7. Final Call To Action */}
         <CTA onGetStarted={handleOpenModal} onNavigate={navigate} />
       </main>
 
-      {/* 11. Footer */}
+      {/* 8. Footer */}
       <Footer onGetStarted={handleOpenModal} onNavigate={navigate} />
 
       {/* Interactive Modal */}
-      <GetStartedModal isOpen={modalOpen} onClose={handleCloseModal} />
+      <GetStartedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onNavigate={navigate} />
     </div>
   )
 }

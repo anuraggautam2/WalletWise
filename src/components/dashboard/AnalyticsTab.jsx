@@ -43,8 +43,8 @@ export default function AnalyticsTab() {
 
   const topCategory = stats.categoryBreakdown?.[0] || null
 
-  // Palette for Pie Chart
-  const PIE_COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EC4899', '#06B6D4', '#64748B']
+  // Refined Fintech Palette for Pie Chart
+  const PIE_COLORS = ['#10B981', '#06B6D4', '#6366F1', '#F59E0B', '#F43F5E', '#8B5CF6', '#64748B']
 
   // Category Pie Chart data
   const pieData = (stats.categoryBreakdown || []).map((cat) => ({
@@ -56,13 +56,13 @@ export default function AnalyticsTab() {
   const comparisonData = [
     {
       name: 'This Month',
-      Income: stats.monthlyIncome,
-      Expense: stats.monthlyExpense,
+      Inflow: stats.monthlyIncome,
+      Outflow: stats.monthlyExpense,
     },
     {
       name: 'Lifetime',
-      Income: stats.totalIncome,
-      Expense: stats.totalExpense,
+      Inflow: stats.totalIncome,
+      Outflow: stats.totalExpense,
     },
   ]
 
@@ -87,7 +87,7 @@ export default function AnalyticsTab() {
       ['Daily Average', dailyAverage],
       [''],
       ['Category Breakdown'],
-      ['Category', 'Amount (INR)', 'Percentage'],
+      ['Category', 'Amount', 'Percentage'],
       ...(stats.categoryBreakdown || []).map((c) => [c.category, c.amount, `${c.percentage}%`]),
     ]
 
@@ -104,7 +104,7 @@ export default function AnalyticsTab() {
   const hasData = income > 0 || expense > 0
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-up">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -116,7 +116,7 @@ export default function AnalyticsTab() {
           </p>
         </div>
 
-        <Button variant="outline" size="sm" onClick={handleExportSummaryCSV} disabled={!hasData}>
+        <Button variant="secondary" size="sm" onClick={handleExportSummaryCSV} disabled={!hasData}>
           <Download className="w-4 h-4" />
           <span>Export Financial Report</span>
         </Button>
@@ -124,30 +124,30 @@ export default function AnalyticsTab() {
 
       {/* 4 Financial Key Ratios */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5" glow glowColor="blue">
+        <Card className="p-5">
           <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Savings Rate</span>
-          <p className="text-2xl sm:text-3xl font-extrabold text-text-main mt-2">{savingsRate}%</p>
-          <p className="text-[11px] text-text-muted mt-2">Target recommended: &ge; 15%</p>
-        </Card>
-
-        <Card className="p-5" glow glowColor="green">
-          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Current Savings Buffer</span>
-          <p className="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-2">{formatCurrency(savings)}</p>
-          <p className="text-[11px] text-text-muted mt-2">Unspent allowance reserved</p>
-        </Card>
-
-        <Card className="p-5" glow glowColor="violet">
-          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Daily Average Burn</span>
-          <p className="text-2xl sm:text-3xl font-extrabold text-rose-400 mt-2">{formatCurrency(dailyAverage)}</p>
-          <p className="text-[11px] text-text-muted mt-2">Over current month cycle</p>
+          <p className="text-2xl sm:text-3xl font-extrabold font-mono tabular-nums text-text-main mt-2">{savingsRate}%</p>
+          <p className="text-[11px] text-text-muted mt-2">Target benchmark: &ge; 15%</p>
         </Card>
 
         <Card className="p-5">
-          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Highest Spend Area</span>
-          <p className="text-2xl sm:text-3xl font-extrabold text-brand-blue-light mt-2 truncate">
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Current Buffer</span>
+          <p className="text-2xl sm:text-3xl font-extrabold font-mono tabular-nums text-emerald-400 mt-2">{formatCurrency(savings)}</p>
+          <p className="text-[11px] text-text-muted mt-2">Unspent funds retained</p>
+        </Card>
+
+        <Card className="p-5">
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Daily Average Outflow</span>
+          <p className="text-2xl sm:text-3xl font-extrabold font-mono tabular-nums text-rose-400 mt-2">{formatCurrency(dailyAverage)}</p>
+          <p className="text-[11px] text-text-muted mt-2">Across current month</p>
+        </Card>
+
+        <Card className="p-5">
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Top Expense Area</span>
+          <p className="text-2xl sm:text-3xl font-extrabold text-text-main mt-2 truncate">
             {topCategory ? topCategory.category : 'None'}
           </p>
-          <p className="text-[11px] text-text-muted mt-2">
+          <p className="text-[11px] text-text-muted mt-2 font-mono tabular-nums">
             {topCategory ? `${formatCurrency(topCategory.amount)} (${topCategory.percentage}%)` : 'No expenses logged'}
           </p>
         </Card>
@@ -159,10 +159,10 @@ export default function AnalyticsTab() {
         <Card className="lg:col-span-7 p-5 sm:p-6">
           <div className="flex items-center justify-between pb-4 border-b border-dark-border">
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-text-main">Cash Flow: Income vs Outflow</h3>
+              <h3 className="text-sm sm:text-base font-bold text-text-main">Cash Flow: Inflow vs Outflow</h3>
               <p className="text-xs text-text-muted mt-0.5">Compare total intake against spending</p>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-md bg-dark-secondary text-text-secondary border border-dark-border">
+            <span className="text-xs px-2.5 py-1 rounded-md bg-dark-secondary text-text-secondary border border-dark-border font-medium">
               Comparison
             </span>
           </div>
@@ -177,9 +177,9 @@ export default function AnalyticsTab() {
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <div className="p-3 rounded-xl bg-dark-card-elevated border border-dark-border shadow-xl text-xs space-y-1">
+                          <div className="p-3 rounded-lg bg-dark-card border border-dark-border shadow-xl text-xs space-y-1">
                             {payload.map((entry, idx) => (
-                              <p key={idx} className="font-semibold" style={{ color: entry.color }}>
+                              <p key={idx} className="font-semibold font-mono tabular-nums" style={{ color: entry.color }}>
                                 {entry.name}: {formatCurrency(entry.value)}
                               </p>
                             ))}
@@ -190,8 +190,8 @@ export default function AnalyticsTab() {
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                  <Bar dataKey="Income" fill="#10B981" radius={[6, 6, 0, 0]} />
-                  <Bar dataKey="Expense" fill="#EF4444" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="Inflow" fill="#10B981" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Outflow" fill="#F43F5E" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -209,7 +209,7 @@ export default function AnalyticsTab() {
               <h3 className="text-sm sm:text-base font-bold text-text-main">Category Distribution</h3>
               <p className="text-xs text-text-muted mt-0.5">Proportional breakdown of expenses</p>
             </div>
-            <PieIcon className="w-4 h-4 text-brand-blue-light" />
+            <PieIcon className="w-4 h-4 text-emerald-400" />
           </div>
 
           <div className="h-64 sm:h-72 w-full pt-2 flex items-center justify-center">
@@ -234,9 +234,11 @@ export default function AnalyticsTab() {
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <div className="p-2.5 rounded-xl bg-dark-card-elevated border border-dark-border shadow-xl text-xs">
+                          <div className="p-2.5 rounded-lg bg-dark-card border border-dark-border shadow-xl text-xs">
                             <span className="font-bold text-text-main">{payload[0].name}</span>
-                            <p className="text-brand-blue-light font-bold mt-0.5">{formatCurrency(payload[0].value)}</p>
+                            <p className="text-emerald-400 font-bold font-mono tabular-nums mt-0.5">
+                              {formatCurrency(payload[0].value)}
+                            </p>
                           </div>
                         )
                       }
@@ -260,7 +262,7 @@ export default function AnalyticsTab() {
             <h3 className="text-sm sm:text-base font-bold text-text-main">Weekly Spending Trend</h3>
             <p className="text-xs text-text-muted mt-0.5">Monitor week-over-week spending pace within this month</p>
           </div>
-          <Calendar className="w-4 h-4 text-brand-violet-light" />
+          <Calendar className="w-4 h-4 text-emerald-400" />
         </div>
 
         <div className="h-56 w-full pt-4">
@@ -273,16 +275,18 @@ export default function AnalyticsTab() {
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="p-2.5 rounded-xl bg-dark-card-elevated border border-dark-border shadow-xl text-xs">
+                        <div className="p-2.5 rounded-lg bg-dark-card border border-dark-border shadow-xl text-xs">
                           <p className="text-text-muted">{payload[0].payload.name}</p>
-                          <p className="font-bold text-brand-violet-light mt-0.5">{formatCurrency(payload[0].value)}</p>
+                          <p className="font-bold font-mono tabular-nums text-emerald-400 mt-0.5">
+                            {formatCurrency(payload[0].value)}
+                          </p>
                         </div>
                       )
                     }
                     return null
                   }}
                 />
-                <Bar dataKey="amount" fill="#8B5CF6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="amount" fill="#10B981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
