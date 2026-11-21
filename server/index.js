@@ -10,6 +10,7 @@ import authRoutes from './routes/authRoutes.js'
 import transactionRoutes from './routes/transactionRoutes.js'
 import budgetRoutes from './routes/budgetRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import savingsRoutes from './routes/savingsRoutes.js'
 
 // Load environment variables
 dotenv.config()
@@ -23,6 +24,18 @@ app.set('trust proxy', 1)
 
 // Connect database (auto-falls back to local JSON persistence if offline)
 connectDB()
+
+// Database connection guarantee middleware for serverless execution
+app.use(async (req, res, next) => {
+  if (process.env.MONGODB_URI && !getDBStatus()) {
+    try {
+      await connectDB()
+    } catch (err) {
+      console.warn('[DB Middleware] Connection attempt deferred:', err.message)
+    }
+  }
+  next()
+})
 
 // -------------------------------------------------------------
 // SECURITY & ESSENTIAL MIDDLEWARE
@@ -105,9 +118,19 @@ app.use('/budgets', budgetRoutes)
 app.use('/api/users', userRoutes)
 app.use('/users', userRoutes)
 
+app.use('/api/savings', savingsRoutes)
+app.use('/savings', savingsRoutes)
+
 // 404 handler for undefined API routes
 app.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/auth') || req.originalUrl.startsWith('/transactions') || req.originalUrl.startsWith('/budgets') || req.originalUrl.startsWith('/users')) {
+  if (
+    req.originalUrl.startsWith('/api') ||
+    req.originalUrl.startsWith('/auth') ||
+    req.originalUrl.startsWith('/transactions') ||
+    req.originalUrl.startsWith('/budgets') ||
+    req.originalUrl.startsWith('/users') ||
+    req.originalUrl.startsWith('/savings')
+  ) {
     return res.status(404).json({
       success: false,
       message: `API endpoint '${req.originalUrl}' does not exist.`

@@ -21,11 +21,12 @@ import { useTransactions } from '../../context/TransactionContext'
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../constants/categories.js'
 
 export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
-  const { transactions, pagination, refreshData, deleteTransaction, loading } = useTransactions()
+  const { transactions, pagination, refreshData, deleteTransaction, formatCurrency, exportCSV, loading } = useTransactions()
 
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
   const [type, setType] = useState('All') // 'All' | 'expense' | 'income'
+  const [dateRange, setDateRange] = useState('all') // 'all' | 'month' | '30days' | 'week'
   const [sortBy, setSortBy] = useState('date')
   const [sortOrder, setSortOrder] = useState('desc')
   const [page, setPage] = useState(1)
@@ -36,16 +37,30 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
 
   // Trigger query on filter change
   useEffect(() => {
+    let startDate = undefined
+    let endDate = undefined
+
+    const now = new Date()
+    if (dateRange === 'month') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+    } else if (dateRange === '30days') {
+      startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+    } else if (dateRange === 'week') {
+      startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    }
+
     refreshData({
       search,
       category,
       type,
+      startDate,
+      endDate,
       sortBy,
       sortOrder,
       page,
       limit: 15,
     })
-  }, [search, category, type, sortBy, sortOrder, page, refreshData])
+  }, [search, category, type, dateRange, sortBy, sortOrder, page, refreshData])
 
   const handleDeleteConfirm = async () => {
     if (!deleteTargetId) return
@@ -56,10 +71,13 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
   }
 
   // Export to CSV
-  const handleExportCSV = () => {
+  const handleExportCSV = async () => {
     if (!transactions.length) return
+    const success = await exportCSV()
+    if (success) return
 
-    const headers = ['Type', 'Title', 'Amount (INR)', 'Category', 'Date', 'Payment Method', 'Description']
+    // Fallback client export
+    const headers = ['Type', 'Title', 'Amount', 'Category', 'Date', 'Payment Method', 'Description']
     const rows = transactions.map((t) => [
       t.type,
       `"${t.title.replace(/"/g, '""')}"`,
@@ -125,6 +143,21 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
               <option value="All">All Types</option>
               <option value="expense">Expenses Only</option>
               <option value="income">Income Only</option>
+            </select>
+
+            {/* Date Range selector */}
+            <select
+              value={dateRange}
+              onChange={(e) => {
+                setDateRange(e.target.value)
+                setPage(1)
+              }}
+              className="px-3 py-2 rounded-xl bg-dark-secondary border border-dark-border text-text-main text-xs focus:outline-none focus:border-brand-blue transition-colors"
+            >
+              <option value="all">All Dates</option>
+              <option value="month">This Month</option>
+              <option value="30days">Last 30 Days</option>
+              <option value="week">Past 7 Days</option>
             </select>
 
             {/* Category selector */}
@@ -236,7 +269,7 @@ export default function TransactionsTab({ onOpenAddModal, onEditTransaction }) {
                     {/* Amount */}
                     <td className="py-3.5 px-4 text-right whitespace-nowrap font-extrabold text-sm">
                       <span className={tx.type === 'income' ? 'text-emerald-400' : 'text-text-main'}>
-                        {tx.type === 'income' ? '+' : '-'}₹{(tx.amount || 0).toLocaleString('en-IN')}
+                        {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
                       </span>
                     </td>
 

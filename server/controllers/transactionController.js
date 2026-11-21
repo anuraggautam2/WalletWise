@@ -155,3 +155,33 @@ export const getTransactionStats = async (req, res, next) => {
     next(err)
   }
 }
+
+// -------------------------------------------------------------
+// GET /api/transactions/export/csv
+// -------------------------------------------------------------
+export const exportTransactionsCSV = async (req, res, next) => {
+  try {
+    const userId = req.user._id || req.user.id
+    const result = await transactionStore.find(userId, { limit: 10000, page: 1 })
+    const txs = result.transactions || []
+
+    const headers = ['Date', 'Title', 'Type', 'Category', 'Amount', 'Payment Method', 'Description']
+    const rows = txs.map((t) => [
+      `"${new Date(t.date).toISOString().split('T')[0]}"`,
+      `"${(t.title || '').replace(/"/g, '""')}"`,
+      `"${t.type}"`,
+      `"${t.category}"`,
+      `"${t.amount}"`,
+      `"${t.paymentMethod || 'UPI'}"`,
+      `"${(t.description || '').replace(/"/g, '""')}"`
+    ])
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
+
+    res.setHeader('Content-Type', 'text/csv')
+    res.setHeader('Content-Disposition', 'attachment; filename="walletwise-transactions.csv"')
+    res.status(200).send(csvContent)
+  } catch (err) {
+    next(err)
+  }
+}

@@ -12,6 +12,7 @@ import {
   TrendingUp,
   ChevronRight,
   Clock,
+  PiggyBank,
 } from 'lucide-react'
 import {
   ResponsiveContainer,
@@ -29,11 +30,7 @@ import { useAuth } from '../../context/AuthContext'
 
 export default function OverviewTab({ onOpenAddModal, onNavigateTab }) {
   const { user } = useAuth()
-  const { stats, budgets, loading } = useTransactions()
-
-  const formatCurrency = (val) => {
-    return '₹' + (val || 0).toLocaleString('en-IN')
-  }
+  const { stats, budgets, savingsSummary, formatCurrency, loading } = useTransactions()
 
   // Determine greeting based on local time
   const getGreeting = () => {
@@ -190,6 +187,50 @@ export default function OverviewTab({ onOpenAddModal, onNavigateTab }) {
         </Card>
       </div>
 
+      {/* Savings Goal Quick Overview Banner */}
+      <Card className="p-4 sm:p-5 bg-gradient-to-r from-emerald-500/10 via-dark-card to-dark-card border-emerald-500/20">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
+              <PiggyBank className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-bold text-text-main">Savings Goals</h4>
+                {savingsSummary.totalGoals > 0 && (
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    {savingsSummary.overallPercentage}% funded
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-text-muted mt-0.5">
+                {savingsSummary.totalGoals > 0
+                  ? `${formatCurrency(savingsSummary.totalSaved)} saved across ${savingsSummary.totalGoals} goals (${savingsSummary.completedGoals} completed)`
+                  : 'Track targets for tuition, gadgets, travel, or an emergency buffer'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {savingsSummary.totalGoals > 0 && (
+              <div className="hidden md:block w-36 bg-dark-secondary h-2 rounded-full overflow-hidden">
+                <div
+                  className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, savingsSummary.overallPercentage)}%` }}
+                />
+              </div>
+            )}
+            <button
+              onClick={() => onNavigateTab('savings')}
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors whitespace-nowrap"
+            >
+              <span>{savingsSummary.totalGoals > 0 ? 'Manage Goals' : 'Create First Goal'}</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </Card>
+
       {/* Middle Grid: Spending Chart & Category Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Recharts Spending Curve (7 Cols) */}
@@ -227,7 +268,7 @@ export default function OverviewTab({ onOpenAddModal, onNavigateTab }) {
                       fontSize={11}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(v) => `₹${v}`}
+                      tickFormatter={(v) => formatCurrency(v)}
                     />
                     <Tooltip
                       content={({ active, payload }) => {

@@ -76,6 +76,35 @@ const saveLocalBudgets = (budgets) => {
   } catch (e) {}
 }
 
+const getLocalSavingsGoals = () => {
+  try {
+    const raw = localStorage.getItem('walletwise_local_savings')
+    if (raw) return JSON.parse(raw)
+  } catch (e) {}
+  const initial = [
+    {
+      _id: 'goal_7a102b3c-4d5e',
+      title: 'New Coding Laptop Fund',
+      targetAmount: 50000,
+      currentAmount: 18500,
+      targetDate: '2026-12-31T00:00:00.000Z',
+      category: 'Gadgets & Tech',
+      color: '#3B82F6',
+      description: 'Upgrading setup for semester project and freelance work',
+      isCompleted: false,
+      createdAt: '2026-11-19T06:36:00.000Z'
+    }
+  ]
+  localStorage.setItem('walletwise_local_savings', JSON.stringify(initial))
+  return initial
+}
+
+const saveLocalSavingsGoals = (goals) => {
+  try {
+    localStorage.setItem('walletwise_local_savings', JSON.stringify(goals))
+  } catch (e) {}
+}
+
 const getHeaders = () => {
   const token = localStorage.getItem('walletwise_token')
   const headers = {
@@ -489,6 +518,142 @@ export const api = {
       budgets = budgets.filter((b) => b._id !== id)
       saveLocalBudgets(budgets)
       return { success: true, message: 'Budget removed successfully!' }
+    }
+  },
+
+  // -----------------------------------------------------------
+  // SAVINGS GOALS
+  // -----------------------------------------------------------
+  async getSavingsGoals() {
+    try {
+      return await request('/savings', { method: 'GET' })
+    } catch (err) {
+      const goals = getLocalSavingsGoals()
+      const totalTarget = goals.reduce((sum, g) => sum + (Number(g.targetAmount) || 0), 0)
+      const totalSaved = goals.reduce((sum, g) => sum + (Number(g.currentAmount) || 0), 0)
+      const completedCount = goals.filter((g) => g.isCompleted || (g.currentAmount >= g.targetAmount)).length
+      return {
+        success: true,
+        data: goals,
+        summary: {
+          totalGoals: goals.length,
+          completedGoals: completedCount,
+          totalTarget,
+          totalSaved,
+          overallPercentage: totalTarget > 0 ? Math.min(100, Math.round((totalSaved / totalTarget) * 100)) : 0
+        }
+      }
+    }
+  },
+
+  async createSavingsGoal(goalData) {
+    try {
+      return await request('/savings', {
+        method: 'POST',
+        body: JSON.stringify(goalData),
+      })
+    } catch (err) {
+      const goals = getLocalSavingsGoals()
+      const newGoal = {
+        _id: 'goal_' + Math.random().toString(36).substr(2, 9),
+        ...goalData,
+        targetAmount: Number(goalData.targetAmount),
+        currentAmount: Number(goalData.currentAmount || 0),
+        isCompleted: Number(goalData.currentAmount || 0) >= Number(goalData.targetAmount),
+        createdAt: new Date().toISOString()
+      }
+      goals.unshift(newGoal)
+      saveLocalSavingsGoals(goals)
+      return { success: true, data: newGoal, message: 'Savings goal created successfully!' }
+    }
+  },
+
+  async updateSavingsGoal(id, goalData) {
+    try {
+      return await request(`/savings/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(goalData),
+      })
+    } catch (err) {
+      let goals = getLocalSavingsGoals()
+      goals = goals.map((g) => (g._id === id ? { ...g, ...goalData, targetAmount: Number(goalData.targetAmount || g.targetAmount) } : g))
+      saveLocalSavingsGoals(goals)
+      return { success: true, message: 'Savings goal updated!' }
+    }
+  },
+
+  async addSavingsDeposit(id, amount) {
+    try {
+      return await request(`/savings/${id}/deposit`, {
+        method: 'POST',
+        body: JSON.stringify({ amount }),
+      })
+    } catch (err) {
+      let goals = getLocalSavingsGoals()
+      const idx = goals.findIndex((g) => g._id === id)
+      if (idx !== -1) {
+        goals[idx].currentAmount = (Number(goals[idx].currentAmount) || 0) + Number(amount)
+        if (goals[idx].currentAmount >= goals[idx].targetAmount) {
+          goals[idx].isCompleted = true
+        }
+        saveLocalSavingsGoals(goals)
+        return { success: true, data: goals[idx], message: 'Contribution added!' }
+      }
+      throw err
+    }
+  },
+
+  async deleteSavingsGoal(id) {
+    try {
+      return await request(`/savings/${id}`, { method: 'DELETE' })
+    } catch (err) {
+      let goals = getLocalSavingsGoals()
+      goals = goals.filter((g) => g._id !== id)
+      saveLocalSavingsGoals(goals)
+      return { success: true, message: 'Savings goal removed!' }
+    }
+  },
+
+  async exportTransactionsCSV() {
+    try {
+      const res = await fetch(`${API_BASE}/transactions/export/csv`, {
+        headers: getHeaders()
+      })
+      if (!res.ok) throw new Error('Failed to download CSV from server')
+      const blob = await res.blob()
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = `walletwise-transactions-${new Date().toISOString().split('T')[0]}.csv`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(downloadUrl)
+      return { success: true }
+    } catch (e) {
+      // Client-side CSV generation fallback
+      const txs = getLocalTransactions()
+      const headers = ['Date', 'Title', 'Type', 'Category', 'Amount', 'Payment Method', 'Description']
+      const rows = txs.map((t) => [
+        `"${new Date(t.date).toISOString().split('T')[0]}"`,
+        `"${(t.title || '').replace(/"/g, '""')}"`,
+        `"${t.type}"`,
+        `"${t.category}"`,
+        `"${t.amount}"`,
+        `"${t.paymentMethod || 'UPI'}"`,
+        `"${(t.description || '').replace(/"/g, '""')}"`
+      ])
+      const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
+      const blob = new Blob([csvContent], { type: 'text/csv' })
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = `walletwise-transactions-${new Date().toISOString().split('T')[0]}.csv`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(downloadUrl)
+      return { success: true }
     }
   },
 

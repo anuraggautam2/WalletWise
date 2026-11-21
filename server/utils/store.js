@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs'
 import User from '../models/User.js'
 import Transaction from '../models/Transaction.js'
 import Budget from '../models/Budget.js'
+import SavingsGoal from '../models/SavingsGoal.js'
 import { getDBStatus } from '../config/db.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -59,7 +60,23 @@ const INITIAL_STORE_DATA = {
       updatedAt: '2026-11-19T06:35:46.070Z'
     }
   ],
-  budgets: []
+  budgets: [],
+  savingsGoals: [
+    {
+      _id: 'goal_7a102b3c-4d5e',
+      userId: 'usr_38916901-c73',
+      title: 'New Coding Laptop Fund',
+      targetAmount: 50000,
+      currentAmount: 18500,
+      targetDate: '2026-12-31T00:00:00.000Z',
+      category: 'Gadgets & Tech',
+      color: '#3B82F6',
+      description: 'Upgrading setup for semester projects and freelance work',
+      isCompleted: false,
+      createdAt: '2026-11-19T06:36:00.000Z',
+      updatedAt: '2026-11-19T06:36:00.000Z'
+    }
+  ]
 }
 
 let inMemoryStore = JSON.parse(JSON.stringify(INITIAL_STORE_DATA))
@@ -587,6 +604,141 @@ export const budgetStore = {
     if (index === -1) return null
 
     const [deleted] = data.budgets.splice(index, 1)
+    saveLocalData(data)
+    return deleted
+  }
+}
+
+// -------------------------------------------------------------
+// SAVINGS GOAL OPERATIONS
+// -------------------------------------------------------------
+export const savingsStore = {
+  async find(userId) {
+    if (getDBStatus()) {
+      return await SavingsGoal.find({ userId }).sort({ createdAt: -1 })
+    }
+    const data = loadLocalData()
+    if (!data.savingsGoals) data.savingsGoals = []
+    return data.savingsGoals.filter((g) => g.userId === userId.toString())
+  },
+
+  async findById(id, userId) {
+    if (getDBStatus()) {
+      return await SavingsGoal.findOne({ _id: id, userId })
+    }
+    const data = loadLocalData()
+    if (!data.savingsGoals) data.savingsGoals = []
+    return data.savingsGoals.find((g) => g._id === id && g.userId === userId.toString()) || null
+  },
+
+  async create(payload) {
+    const targetAmount = parseFloat(payload.targetAmount)
+    const currentAmount = parseFloat(payload.currentAmount || 0)
+    const isCompleted = currentAmount >= targetAmount
+
+    if (getDBStatus()) {
+      return await SavingsGoal.create({
+        ...payload,
+        targetAmount,
+        currentAmount,
+        isCompleted
+      })
+    }
+
+    const data = loadLocalData()
+    if (!data.savingsGoals) data.savingsGoals = []
+
+    const newGoal = {
+      _id: 'goal_' + crypto.randomUUID().slice(0, 12),
+      userId: payload.userId.toString(),
+      title: payload.title.trim(),
+      targetAmount,
+      currentAmount,
+      targetDate: payload.targetDate ? new Date(payload.targetDate).toISOString() : null,
+      category: payload.category || 'Other',
+      color: payload.color || '#3B82F6',
+      description: payload.description ? payload.description.trim() : '',
+      isCompleted,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+
+    data.savingsGoals.unshift(newGoal)
+    saveLocalData(data)
+    return newGoal
+  },
+
+  async update(id, userId, updates) {
+    if (updates.targetAmount) updates.targetAmount = parseFloat(updates.targetAmount)
+    if (updates.currentAmount !== undefined) updates.currentAmount = parseFloat(updates.currentAmount)
+    if (updates.targetAmount && updates.currentAmount !== undefined) {
+      updates.isCompleted = updates.currentAmount >= updates.targetAmount
+    }
+
+    if (getDBStatus()) {
+      return await SavingsGoal.findOneAndUpdate({ _id: id, userId }, updates, { new: true, runValidators: true })
+    }
+
+    const data = loadLocalData()
+    if (!data.savingsGoals) data.savingsGoals = []
+    const index = data.savingsGoals.findIndex((g) => g._id === id && g.userId === userId.toString())
+    if (index === -1) return null
+
+    data.savingsGoals[index] = {
+      ...data.savingsGoals[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    }
+    if (data.savingsGoals[index].currentAmount >= data.savingsGoals[index].targetAmount) {
+      data.savingsGoals[index].isCompleted = true
+    }
+
+    saveLocalData(data)
+    return data.savingsGoals[index]
+  },
+
+  async deposit(id, userId, depositAmount) {
+    const amount = parseFloat(depositAmount)
+    if (isNaN(amount) || amount <= 0) {
+      throw new Error('Please enter a valid deposit amount greater than zero.')
+    }
+
+    if (getDBStatus()) {
+      const goal = await SavingsGoal.findOne({ _id: id, userId })
+      if (!goal) return null
+      goal.currentAmount = (goal.currentAmount || 0) + amount
+      if (goal.currentAmount >= goal.targetAmount) {
+        goal.isCompleted = true
+      }
+      return await goal.save()
+    }
+
+    const data = loadLocalData()
+    if (!data.savingsGoals) data.savingsGoals = []
+    const index = data.savingsGoals.findIndex((g) => g._id === id && g.userId === userId.toString())
+    if (index === -1) return null
+
+    const current = (data.savingsGoals[index].currentAmount || 0) + amount
+    data.savingsGoals[index].currentAmount = current
+    if (current >= data.savingsGoals[index].targetAmount) {
+      data.savingsGoals[index].isCompleted = true
+    }
+    data.savingsGoals[index].updatedAt = new Date().toISOString()
+
+    saveLocalData(data)
+    return data.savingsGoals[index]
+  },
+
+  async delete(id, userId) {
+    if (getDBStatus()) {
+      return await SavingsGoal.findOneAndDelete({ _id: id, userId })
+    }
+    const data = loadLocalData()
+    if (!data.savingsGoals) data.savingsGoals = []
+    const index = data.savingsGoals.findIndex((g) => g._id === id && g.userId === userId.toString())
+    if (index === -1) return null
+
+    const [deleted] = data.savingsGoals.splice(index, 1)
     saveLocalData(data)
     return deleted
   }

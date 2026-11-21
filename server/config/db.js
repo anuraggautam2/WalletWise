@@ -1,37 +1,61 @@
 import mongoose from 'mongoose'
 
-let isConnected = false
-let connectionPromise = null
+// Global connection caching across serverless invocations
+let cached = global.mongoose
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null, lastFailure: 0 }
+}
 
 export const connectDB = async () => {
-  if (isConnected) return true
-  if (connectionPromise) return connectionPromise
+  // If already connected, return existing connection
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return true
+  }
 
   const uri = process.env.MONGODB_URI
 
-  // In Vercel or production serverless, if no MONGODB_URI or default localhost is configured,
-  // skip trying to connect to 127.0.0.1 to avoid 2-second timeout delays on cold starts
-  if (!uri || (process.env.VERCEL && uri.includes('127.0.0.1'))) {
-    isConnected = false
-    console.log(`[MongoDB] No external MONGODB_URI configured. Running in resilient local JSON-persisted store mode.`)
+  // If no external MONGODB_URI configured and running in dev, fallback to local store
+  if (!uri) {
+    console.log('[MongoDB] Notice: No MONGODB_URI configured. Running in resilient local store mode.')
     return false
   }
 
-  try {
-    connectionPromise = mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 2500,
+  // Prevent blocking consecutive requests when DB is unreachable (15s cooldown)
+  if (cached.lastFailure && (Date.now() - cached.lastFailure < 15000)) {
+    return false
+  }
+
+  if (!cached.promise) {
+    const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+      autoIndex: process.env.NODE_ENV !== 'production',
+      maxPoolSize: 10
+    }
+
+    cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
+      console.log(`[MongoDB] Connected to cluster: ${mongooseInstance.connection.host}`)
+      cached.lastFailure = 0
+      return mongooseInstance
+    }).catch((err) => {
+      cached.promise = null
+      cached.lastFailure = Date.now()
+      console.error(`[MongoDB] Connection failed: ${err.message}`)
+      return null
     })
-    const conn = await connectionPromise
-    isConnected = true
-    console.log(`[MongoDB] Connected to database: ${conn.connection.host}`)
-    return true
+  }
+
+  try {
+    cached.conn = await cached.promise
+    return Boolean(cached.conn && mongoose.connection.readyState === 1)
   } catch (err) {
-    isConnected = false
-    connectionPromise = null
-    console.log(`[MongoDB] Notice: Remote MongoDB not reachable (${err.message}). Using resilient local store.`)
+    cached.promise = null
+    cached.conn = null
+    cached.lastFailure = Date.now()
     return false
   }
 }
 
-export const getDBStatus = () => isConnected
+export const getDBStatus = () => {
+  return Boolean(cached && cached.conn && mongoose.connection.readyState === 1)
+}

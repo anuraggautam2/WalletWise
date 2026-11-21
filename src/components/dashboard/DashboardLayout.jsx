@@ -5,6 +5,7 @@ import Topbar from './Topbar'
 import OverviewTab from './OverviewTab'
 import TransactionsTab from './TransactionsTab'
 import BudgetsTab from './BudgetsTab'
+import SavingsTab from './SavingsTab'
 import AnalyticsTab from './AnalyticsTab'
 import SettingsTab from './SettingsTab'
 import AddTransactionModal from './AddTransactionModal'
@@ -90,6 +91,7 @@ export default function DashboardLayout({ onNavigate }) {
                   onOpenAddBudgetModal={() => setAddBudgetModalOpen(true)}
                 />
               )}
+              {activeTab === 'savings' && <SavingsTab />}
               {activeTab === 'analytics' && <AnalyticsTab />}
               {activeTab === 'settings' && <SettingsTab />}
             </motion.div>

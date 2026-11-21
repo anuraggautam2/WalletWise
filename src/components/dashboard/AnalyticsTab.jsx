@@ -30,9 +30,7 @@ import CategoryIcon from '../ui/CategoryIcon'
 import { useTransactions } from '../../context/TransactionContext'
 
 export default function AnalyticsTab() {
-  const { stats, transactions } = useTransactions()
-
-  const formatCurrency = (val) => '₹' + (val || 0).toLocaleString('en-IN')
+  const { stats, transactions, formatCurrency } = useTransactions()
 
   // Calculate Key Financial Metrics
   const income = stats.totalIncome || 0
@@ -174,7 +172,7 @@ export default function AnalyticsTab() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={comparisonData} margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
                   <XAxis dataKey="name" stroke="#64748B" fontSize={12} tickLine={false} />
-                  <YAxis stroke="#64748B" fontSize={11} tickLine={false} tickFormatter={(v) => `₹${v}`} />
+                  <YAxis stroke="#64748B" fontSize={11} tickLine={false} tickFormatter={(v) => formatCurrency(v)} />
                   <Tooltip
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
@@ -270,7 +268,7 @@ export default function AnalyticsTab() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="name" stroke="#64748B" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748B" fontSize={11} tickLine={false} tickFormatter={(v) => `₹${v}`} />
+                <YAxis stroke="#64748B" fontSize={11} tickLine={false} tickFormatter={(v) => formatCurrency(v)} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {

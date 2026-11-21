@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Receipt,
   Target,
+  PiggyBank,
   BarChart3,
   Settings,
   LogOut,
@@ -34,6 +35,7 @@ export default function Sidebar({
     { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'transactions', label: 'Transactions', icon: Receipt },
     { id: 'budgets', label: 'Budgets', icon: Target },
+    { id: 'savings', label: 'Savings Goals', icon: PiggyBank },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ]

@@ -14,6 +14,7 @@ export default function Topbar({
     overview: { title: 'Dashboard Overview', subtitle: 'Track your student finances, daily expenses & monthly pacing.' },
     transactions: { title: 'Transactions Log', subtitle: 'Search, filter, and review every recorded expense and income.' },
     budgets: { title: 'Budget Management', subtitle: 'Set spending thresholds to prevent running out before month-end.' },
+    savings: { title: 'Savings Goals', subtitle: 'Plan milestones, target funds, and track your student savings.' },
     analytics: { title: 'Financial Analytics', subtitle: 'Visual reports and spending patterns to optimize your habits.' },
     settings: { title: 'Account Settings', subtitle: 'Manage your student profile, preferences, and security.' },
   }

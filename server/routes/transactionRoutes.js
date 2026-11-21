@@ -5,7 +5,8 @@ import {
   getTransactionById,
   updateTransaction,
   deleteTransaction,
-  getTransactionStats
+  getTransactionStats,
+  exportTransactionsCSV
 } from '../controllers/transactionController.js'
 import { protect } from '../middleware/auth.js'
 import { validateTransaction } from '../middleware/validate.js'
@@ -16,6 +17,7 @@ const router = express.Router()
 router.use(protect)
 
 router.get('/stats', getTransactionStats)
+router.get('/export/csv', exportTransactionsCSV)
 router.get('/', getTransactions)
 router.post('/', validateTransaction, createTransaction)
 router.get('/:id', getTransactionById)

@@ -16,12 +16,15 @@ import ConfirmDialog from './ConfirmDialog'
 import { useTransactions } from '../../context/TransactionContext'
 
 export default function BudgetsTab({ onOpenAddBudgetModal }) {
-  const { budgets, deleteBudget } = useTransactions()
+  const { budgets, deleteBudget, formatCurrency } = useTransactions()
 
   const [deleteTargetId, setDeleteTargetId] = useState(null)
   const [deleteLoading, setDeleteLoading] = useState(false)
 
-  const formatCurrency = (val) => '₹' + (val || 0).toLocaleString('en-IN')
+  const today = new Date()
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()
+  const currentDay = today.getDate()
+  const monthProgress = Math.round((currentDay / daysInMonth) * 100)
 
   const handleDelete = async () => {
     if (!deleteTargetId) return
@@ -135,24 +138,39 @@ export default function BudgetsTab({ onOpenAddBudgetModal }) {
             </div>
           </div>
 
-          {/* Pacing Advice */}
-          <div className="mt-6 p-4 rounded-xl bg-dark-secondary/60 border border-dark-border/60 flex items-start gap-3">
-            <Info className="w-4 h-4 text-brand-blue-light mt-0.5 shrink-0" />
-            <p className="text-xs text-text-secondary leading-relaxed">
-              {overall.percentage >= 100 ? (
-                <span className="text-red-400 font-semibold">
-                  Alert: You have exceeded your overall monthly budget by {formatCurrency(overall.spent - overall.amount)}. Consider pausing non-essential spending.
-                </span>
-              ) : overall.percentage >= 80 ? (
-                <span className="text-amber-400 font-semibold">
-                  Caution: You have utilized {overall.percentage}% of your monthly allowance. Maintain essential expenses only.
-                </span>
-              ) : (
-                <span>
-                  Great job! You are pacing well within your monthly allocation with <strong>{formatCurrency(overall.remaining)}</strong> remaining safe spend.
-                </span>
-              )}
-            </p>
+          {/* Pacing Advice & Timeline Progress */}
+          <div className="mt-6 p-4 rounded-xl bg-dark-secondary/60 border border-dark-border/60 space-y-2">
+            <div className="flex items-center justify-between text-[11px] text-text-muted">
+              <span>Month Timeline: Day {currentDay} of {daysInMonth} ({monthProgress}%)</span>
+              <span className={overall.percentage > monthProgress ? 'text-amber-400 font-semibold' : 'text-emerald-400 font-semibold'}>
+                {overall.percentage > monthProgress ? `${overall.percentage - monthProgress}% faster than timeline` : `${monthProgress - overall.percentage}% buffer remaining`}
+              </span>
+            </div>
+            <div className="w-full bg-dark-card h-1.5 rounded-full overflow-hidden">
+              <div
+                className="bg-purple-500/60 h-1.5 rounded-full"
+                style={{ width: `${monthProgress}%` }}
+                title="Current day in month"
+              />
+            </div>
+            <div className="flex items-start gap-3 pt-1">
+              <Info className="w-4 h-4 text-brand-blue-light mt-0.5 shrink-0" />
+              <p className="text-xs text-text-secondary leading-relaxed">
+                {overall.percentage >= 100 ? (
+                  <span className="text-red-400 font-semibold">
+                    Alert: You have exceeded your overall monthly budget by {formatCurrency(overall.spent - overall.amount)}. Consider pausing non-essential spending.
+                  </span>
+                ) : overall.percentage >= 80 ? (
+                  <span className="text-amber-400 font-semibold">
+                    Caution: You have utilized {overall.percentage}% of your monthly allowance with {daysInMonth - currentDay} days remaining. Maintain essential expenses only.
+                  </span>
+                ) : (
+                  <span>
+                    Great job! You are pacing well within your monthly allocation with <strong>{formatCurrency(overall.remaining)}</strong> remaining safe spend.
+                  </span>
+                )}
+              </p>
+            </div>
           </div>
         </Card>
       ) : (

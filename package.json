@@ -9,8 +9,7 @@
     "dev:server": "node server/index.js",
     "start": "node server/index.js",
     "build": "vite build",
-    "preview": "vite preview",
-    "postinstall": "node -e \"try { const fs=require('fs'); const p='node_modules/rollup/dist/native.js'; if(fs.existsSync(p)){ let c=fs.readFileSync(p,'utf8'); if(!c.includes('@rollup/wasm-node/dist/native.js')){ c=c.replace('return require(id);','return require(id);\\n  } catch (e) { try { return require(\\'@rollup/wasm-node/dist/native.js\\'); } catch {}'); fs.writeFileSync(p,c); } } } catch(e) {}\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "@rollup/wasm-node": "^4.68.7",
